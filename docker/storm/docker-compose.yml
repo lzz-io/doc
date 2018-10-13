@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+    zookeeper:
+        image: zookeeper
+        container_name: zookeeper
+        restart: always
+        environment:
+            - TZ=CST-8
+        volumes:
+             - zookeeper-data:/data
+             - zookeeper-log:/datalog
+
+    nimbus:
+        image: storm
+        container_name: nimbus
+        environment:
+            - TZ=CST-8
+        command: storm nimbus
+        depends_on:
+            - zookeeper
+        links:
+            - zookeeper
+        restart: always
+        ports:
+            - 6627:6627
+
+    supervisor:
+        image: storm
+        container_name: supervisor
+        environment:
+            - TZ=CST-8
+        command: storm supervisor
+        depends_on:
+            - nimbus
+            - zookeeper
+        links:
+            - nimbus
+            - zookeeper
+        restart: always
+
+
+volumes:
+    zookeeper-data:
+    zookeeper-log:
+
+
+## for docker stack
+networks:
+    # mynet:
+    #     external: true
+    # storm:
+    #     driver: overlay
+    #     ipam:
+    #         driver: default
+    #         config:
+    #             - subnet: 10.0.1.0/24
+    default:
+       external:
+           name: mynet
+

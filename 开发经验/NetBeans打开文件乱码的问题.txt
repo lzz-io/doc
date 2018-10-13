@@ -1,0 +1,8 @@
+解决NetBeans打开文件乱码的问题
+
+1.找到你的Netbeans安装目录下的etc文件夹,如C:/Program Files/NetBeans 7.2/etc
+2.用记事本打开netbeans.conf
+3.找到netbeans_default_options这一句(没带#号的,带#号的是注释)
+4.在最后面加上一个空格,再加入-J-Dfile.encoding=UTF-8
+
+以后所有文件都是以UTF8格式编码

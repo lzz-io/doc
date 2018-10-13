@@ -1,0 +1,22 @@
+#
+#
+#
+
+version: '3'
+
+services:
+
+    shadowsocks:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/lzz-io/shadowsocks
+        
+        restart: always
+
+        environment:
+            #- TZ="Asia/Shanghai"
+            #- SERVER_PORT=8388
+            - PASSWORD=gfwsb
+            - METHOD=aes-256-cfb
+        
+        ports:
+            - 44443:8388
+   

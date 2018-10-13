@@ -1,0 +1,17 @@
+nginx:
+  image: "nginx"                    #使用nginx:1.11的镜像 
+  ports:   
+    - 443:443   
+  links:   
+    - registry:registry                     #连接一个容器 
+  volumes:   
+    - /data/docker/nginx:/etc/nginx/conf.d  
+registry:   
+  image: registry                   #使用registry:2.5.1镜像 
+  ports:   
+    - 127.0.0.1:5000:5000               #此处如果加上了127.0.0.1只允许本地连接5000端口； 
+  environment:   
+    REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+  volumes:
+    - /data/docker/data:/data
+

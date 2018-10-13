@@ -1,0 +1,11 @@
+
+
+1、双网卡（关键啊关键。。。）
+调整 Virtualbox，第一个网卡为 Host Only，第二块网卡为 NAT。
+
+2、上网网卡用 NAT ，兼容性最好。
+
+3、centos 上网网卡，默认路由，其他未 no
+DEFROUTE=answer, 这里answer取下列值之一：
+yes -- 将该接口设置为默认路由。
+no -- 不要将该接口设置为默认路由。

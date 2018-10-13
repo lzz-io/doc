@@ -1,0 +1,64 @@
+
+
+curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -
+
+#关闭firewalld, selinux
+systemctl enable docker
+systemctl daemon-reload
+systemctl start docker
+systemctl status docker
+
+yum install python-setuptools -y
+easy_install pip
+
+yum -y install epel-release
+yum -y install python-pip
+pip install -U pip
+pip install docker-compose
+
+
+
+http://mirrors.aliyun.com/help/docker-engine
+
+安装方法：
+
+curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -
+            
+如果你使用的是阿里云主机，可以通过内网地址运行这个脚本
+
+curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/intranet | sh -
+            
+安装测试版、实验版的Docker Engine
+
+    ## 测试版
+    curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/test/internet | sh
+    curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/test/intranet | sh
+
+    ## 实验版
+    curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/experimental/internet | sh
+    curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/experimental/intranet | sh
+            
+systemctl enable docker
+
+systemctl daemon-reload
+
+systemctl start docker
+systemctl status docker
+
+
+#由于Centos7 自带的pip版本有点低，所以要升级一下，不然会报错或无法安装上docker-compose。
+pip install --upgrade pip
+pip install --upgrade backports.ssl_match_hostname
+pip install docker-compose
+
+
+
+
+
+
+
+
+
+
+
+		

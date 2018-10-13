@@ -1,0 +1,20 @@
+http://jingyan.baidu.com/article/b2c186c8ffb607c46ff6ff61.html
+
+通过Linux虚拟机窗口的菜单 “设备”->“安装增强功能”
+
+yum install gcc bzip2 kernel-devel -y
+
+mount /dev/cdrom /mnt
+
+ls /mnt
+
+/mnt/VBoxLinuxAdditions.run
+
+reboot
+
+
+###########
+# debian
+###########
+
+apt install -y gcc make bzip2 linux-headers-amd64

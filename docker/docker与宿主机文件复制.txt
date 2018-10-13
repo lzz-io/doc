@@ -1,0 +1,12 @@
+#------------------------------------------------------------
+# 文件复制
+#------------------------------------------------------------
+# 从Container复制文件autorun.sh到Host主机的/home目录下
+# 也可以是目录复制
+docker cp test:/etc/init.d/autorun.sh /home
+
+
+# 从Host主机复制文件或文件夹到Container主机
+# 使用scp命令，如果没有安装scp，使用yum install openssh-clients
+# 首先需要使用docker exec进入到Container的终端
+scp -rp root@192.168.0.35:/home/jetty8/* /home/

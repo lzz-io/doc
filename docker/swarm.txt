@@ -1,0 +1,72 @@
+新版docker swarm 命令详情
+有关集群的docker命令如下：
+
+docker swarm：集群管理，子命令有init, join,join-token, leave, update
+docker node：节点管理，子命令有demote, inspect,ls, promote, rm, ps, update
+docker service：服务管理，子命令有create, inspect, ps, ls ,rm , scale, update
+docker stack/deploy：试验特性，用于多应用部署
+
+
+1、
+	修改 /etc/docker/daemon.json
+	"live-restore": false
+	
+	
+Swarm的 leader/manager 节点
+2、
+	--listen-addr 192.168.56.101 绑定到ipv4
+	docker swarm init --advertise-addr 192.168.56.101 --listen-addr 192.168.56.101
+	
+3、使用 docker info 和 docker node ls 查看集群中的相关信息
+	docker info
+	docker node ls
+
+添加一个 manager 节点,个数2n+1，保证半数以上n+1存活
+4、
+	1、
+	忘记token，在 leader/manager 节点执行
+	docker swarm join-token manager
+
+	2、
+	manager节点执行
+	docker swarm join \
+    --token SWMTKN-1-4toh4ritfc6s30gbwg0ede66hzw61llh55yjt7kn1fwxkfmdff-7rp59o976p4ir4m411zbqxhgh \
+    192.168.56.101:2377
+	
+	
+worker节点	
+5、
+	1、
+	忘记token，在 manager 节点执行
+	docker swarm join-token worker
+	
+	2、
+	worker节点执行
+	docker swarm join \
+    --token SWMTKN-1-4toh4ritfc6s30gbwg0ede66hzw61llh55yjt7kn1fwxkfmdff-63pfv5evpjm9s4kq0ifeo86nf \
+    192.168.56.101:2377
+
+创建应用
+6、
+	docker service create --name rabbitmq -p 15672:15672 --replicas 2 rabbitmq:3.6-management
+	docker service create --name rabbitmq -p 15672:15672 --replicas 1 rabbitmq:3.6-management
+	docker service create --name redis --replicas 1 redis
+	docker service create --name mysql -p 3306:3306 --replicas 1 mysql:5.7
+	docker service create --name nginx -p 80:80 --replicas 1 nginx
+	docker service create --name java --replicas 1 java
+	docker service create --name haproxy --replicas 1 haproxy
+	
+	sleep 30
+	docker service ps rabbitmq
+	sleep 5
+	docker service ls
+	netstat -pltn
+	
+
+删除应用
+7、
+	docker service rm $(docker service ls -q)
+	docker service rm rabbitmq
+	
+	
+	

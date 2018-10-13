@@ -1,0 +1,35 @@
+专属加速器地址 
+https://496kadz8.mirror.aliyuncs.com
+
+daocloud
+http://fff528b5.m.daocloud.io
+
+新版docker version > 1.12
+在 /etc/docker 目录下新建 daemon.json
+内容：
+{
+    "registry-mirrors": ["https://496kadz8.mirror.aliyuncs.com","http://fff528b5.m.daocloud.io"],
+	"graph": "/opt/docker",
+	"ip": "0.0.0.0",
+    "iptables": false,
+    "ipv6": false
+}
+
+
+docker login -u 15590988@qq.com -p admin888 registry-vpc.cn-hongkong.aliyuncs.com
+
+
+######################################
+
+安装或升级Docker
+
+您可以通过阿里云的镜像仓库下载： mirrors.aliyun.com/help/docker-engine
+curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh - 
+配置Docker加速器
+
+您可以使用如下的脚本将mirror的配置添加到docker daemon的启动参数中。
+# 系统要求 CentOS 7 以上，Docker 1.9 以上。 
+sudo cp -n /lib/systemd/system/docker.service /etc/systemd/system/docker.service 
+sudo sed -i "s|ExecStart=/usr/bin/docker daemon|ExecStart=/usr/bin/docker daemon --registry-mirror=https://496kadz8.mirror.aliyuncs.com|g" /etc/systemd/system/docker.service 
+sudo systemctl daemon-reload 
+sudo service docker restart

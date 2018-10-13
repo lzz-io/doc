@@ -1,0 +1,26 @@
+1、使用ssh -v host进行debug
+# ssh -v 192.168.100.10
+
+2、检测连接时间
+# time ssh root@192.168.100.10 exit
+
+二、解决方法（建议一个个设置，因为每个人连接慢的原因都不一样）：
+
+注意：修改之后记得重启sshd服务
+# service sshd restart
+
+
+1、关闭DNS反向解析
+在linux中，默认就是开启了SSH的反向DNS解析,这个会消耗大量时间，因此需要关闭。
+# vi /etc/ssh/sshd_config
+UseDNS=no
+
+在配置文件中，虽然UseDNS yes是被注释的，但默认开关就是yes
+
+
+2、关闭SERVER上的GSS认证
+在authentication gssapi-with-mic有很大的可能出现问题，因此关闭GSS认证可以提高ssh连接速度。
+# vi /etc/ssh/sshd_config
+GSSAPIAuthentication no
+
+

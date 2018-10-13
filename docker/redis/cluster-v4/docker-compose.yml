@@ -1,0 +1,144 @@
+# 
+# 还没找到 docker stack deploy 下，固定容器ip的方式
+# 暂时不支持 docker stack deploy
+# 仅支持docker-compose 方式部署
+# 
+
+version: '3'
+
+services:
+
+    # redis:
+        # image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        # container_name: redis
+        # restart: always
+        # environment:
+        #     - TZ=CST-8
+        # ports:
+        #     - 6379:6379
+        ## redis-server --port $PORT --cluster-enabled yes \
+        ##   --cluster-config-file nodes-${PORT}.conf --cluster-node-timeout $TIMEOUT \
+        ##   --appendonly yes --appendfilename appendonly-${PORT}.aof \
+        ##   --dbfilename dump-${PORT}.rdb --logfile ${PORT}.log --daemonize no
+        # command: redis-server --appendonly yes
+        # volumes:
+        #      - redis-data:/data
+        # networks:
+        #     mynet:
+        #         ipv4_address: 10.0.1.100
+
+        # network_mode: "bridge"
+
+        # deploy:
+        #     replicas: 6
+        #     labels: [APP=VOTING]
+        #     update_config:
+        #        ## 一次更新个数，默认1，建议1/2或1/3
+        #        parallelism: 2
+        #        # delay: 10s
+        #     restart_policy:
+        #        condition: on-failure
+        #     placement:
+        #             constraints: [node.hostname == c101]
+
+    redis1:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis1
+        restart: always
+        ports:
+            - 6379:6379
+        # redis-server --port $PORT --cluster-enabled yes --cluster-config-file nodes-${PORT}.conf --cluster-node-timeout $TIMEOUT --appendonly yes --appendfilename appendonly-${PORT}.aof --dbfilename dump-${PORT}.rdb --logfile ${PORT}.log
+        command: redis-server /usr/local/etc/redis/redis.conf --cluster-enabled yes --cluster-config-file nodes-redis1.conf --cluster-node-timeout 2000 --appendonly yes --appendfilename appendonly-redis1.aof --dbfilename dump-redis1.rdb
+        volumes:
+             - redis-data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.101
+
+    redis2:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis2
+        restart: always
+        ports:
+            - 6380:6379
+        command: redis-server /usr/local/etc/redis/redis.conf --cluster-enabled yes --cluster-config-file nodes-redis2.conf --cluster-node-timeout 2000 --appendonly yes --appendfilename appendonly-redis2.aof --dbfilename dump-redis2.rdb
+        volumes:
+             - redis-data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.102
+
+    redis3:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis3
+        restart: always
+        ports:
+            - 6381:6379
+        command: redis-server /usr/local/etc/redis/redis.conf --cluster-enabled yes --cluster-config-file nodes-redis3.conf --cluster-node-timeout 2000 --appendonly yes --appendfilename appendonly-redis3.aof --dbfilename dump-redis3.rdb
+        volumes:
+             - redis-data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.103
+
+    redis4:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis4
+        restart: always
+        ports:
+            - 6382:6379
+        command: redis-server /usr/local/etc/redis/redis.conf --cluster-enabled yes --cluster-config-file nodes-redis4.conf --cluster-node-timeout 2000 --appendonly yes --appendfilename appendonly-redis4.aof --dbfilename dump-redis4.rdb
+        volumes:
+             - redis-data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.104
+
+    redis5:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis5
+        restart: always
+        ports:
+            - 6383:6379
+        command: redis-server /usr/local/etc/redis/redis.conf --cluster-enabled yes --cluster-config-file nodes-redis5.conf --cluster-node-timeout 2000 --appendonly yes --appendfilename appendonly-redis5.aof --dbfilename dump-redis5.rdb
+        volumes:
+             - redis-data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.105
+
+    redis6:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis6
+        restart: always
+        ports:
+            - 6384:6379
+        command: redis-server /usr/local/etc/redis/redis.conf --cluster-enabled yes --cluster-config-file nodes-redis6.conf --cluster-node-timeout 2000 --appendonly yes --appendfilename appendonly-redis6.aof --dbfilename dump-redis6.rdb
+        volumes:
+             - redis-data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.106
+
+    # phpredmin:
+    #     image: sasanrose/phpredmin
+
+    
+volumes:
+    redis-data:
+
+
+## for docker stack
+networks:
+    mynet:
+        external: true
+    # redis:
+    #     driver: overlay
+    #     ipam:
+    #         driver: default
+    #         config:
+    #             - subnet: 10.0.1.0/24
+    # default:
+    #    external:
+    #        name: mynet
+

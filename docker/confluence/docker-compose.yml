@@ -1,0 +1,76 @@
+#
+#
+#
+
+version: '3'
+
+services:
+
+    confluence:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/confluence
+        container_name: confluence
+        restart: always
+        ports:
+            - 8090:8090
+            - 8091:8091
+
+        environment:
+            - TZ=CST-8
+            - JVM_MINIMUM_MEMORY=2048m
+            - JVM_MAXIMUM_MEMORY=2048m
+
+        ## container内的root拥有真正的root权限。
+        ## 否则，container内的root只是外部的一个普通用户权限。
+        ## privileged启动的容器，可以看到很多host上的设备，并且可以执行mount。
+        ## 用于容器内部使用 systemctl 命令等
+        # privileged: true
+       
+        volumes:
+           - confluence-app-data:/var/atlassian/application-data/confluence
+           - confluence-data:/data
+        #volumes:
+        #    - nfs:/data
+
+        deploy:
+            replicas: 1
+            labels: [APP=CONFLUENCE]
+            # update_config:
+               ## 一次更新个数，默认1，建议1/2或1/3
+               # parallelism: 2
+               # delay: 10s
+            restart_policy:
+               condition: on-failure
+            placement:
+                    constraints: [node.hostname == c103]
+
+    db:
+        image: postgres
+        container_name: postgres
+        restart: always
+        ports:
+            - 5432:5432
+
+        environment:
+            - TZ=CST-8
+            - LANG=C.UTF-8
+            # - POSTGRES_PASSWORD=password
+        volumes:
+           - postgres-data:/var/lib/postgresql/data
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
+
+
+volumes:
+    confluence-app-data:
+    confluence-data:
+    postgres-data:
+
+
+## for docker stack
+#networks:
+#    ingress:
+#        external: true

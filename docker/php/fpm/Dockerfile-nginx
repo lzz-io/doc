@@ -1,0 +1,13 @@
+# lzz.io docker file
+
+FROM nginx
+
+LABEL author="lzz.io" \
+		qq=1219331697 \
+		url=lzz.io
+		
+ENV TZ="Asia/Shanghai"
+
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+COPY ./www/ /usr/share/nginx/html

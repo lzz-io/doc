@@ -1,0 +1,95 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=SH, L=shanghai, O=sh, OU=sh, CN=server/name=server/emailAddress=sh@cn.cn
+        Validity
+            Not Before: Dec  5 02:58:38 2015 GMT
+            Not After : Dec  2 02:58:38 2025 GMT
+        Subject: C=CN, ST=SH, L=shanghai, O=sh, OU=sh, CN=server/name=server/emailAddress=sh@cn.cn
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:b1:85:a1:4b:1a:7a:bd:ae:52:af:ba:89:dd:98:
+                    90:7d:7e:c8:69:66:e3:d6:e1:98:e8:b6:a3:00:26:
+                    1c:51:75:04:f4:58:4d:66:cf:a9:4f:29:6c:78:1f:
+                    ef:21:9c:0e:e3:21:a7:ac:b7:9b:ff:fc:d7:aa:99:
+                    93:96:7c:33:4f:2d:bf:52:28:c8:10:9e:ac:b6:58:
+                    08:e8:0f:3f:f0:18:de:8f:b8:fd:4b:32:68:ee:77:
+                    16:e7:36:fc:7a:0d:85:e6:5c:8d:b0:63:77:99:b2:
+                    a8:46:ef:93:b9:54:a8:03:64:9d:d7:8a:2f:b9:1a:
+                    f4:3e:ec:a6:63:d7:47:cb:43:3a:40:b9:00:aa:ee:
+                    ec:82:45:ee:fa:20:e6:c3:53:15:2b:75:ec:06:4d:
+                    16:22:94:f8:43:88:7d:5e:80:76:6e:c2:4b:36:66:
+                    ac:aa:ef:2f:c9:c9:83:2f:da:97:7d:14:3f:e0:2f:
+                    76:72:fe:4b:4f:e7:d1:ab:85:05:ec:eb:5a:31:ea:
+                    47:88:6e:05:db:e9:b5:e0:0d:e7:ef:5e:07:e6:68:
+                    89:24:a7:e3:27:13:31:53:1a:41:ae:c1:62:02:66:
+                    ef:50:47:e6:eb:04:fc:32:79:f9:8a:1f:01:f4:7c:
+                    52:8f:f2:a4:a8:d1:3c:75:33:8b:f2:1c:ec:ac:4b:
+                    82:c1
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Cert Type: 
+                SSL Server
+            Netscape Comment: 
+                Easy-RSA Generated Server Certificate
+            X509v3 Subject Key Identifier: 
+                F8:27:A7:63:2A:41:09:D0:8F:9C:55:55:F0:93:5D:04:1C:DE:A9:97
+            X509v3 Authority Key Identifier: 
+                keyid:CC:FD:49:13:E5:FC:59:20:BE:FC:25:C3:5D:46:CD:3D:DF:A8:B5:A3
+                DirName:/C=CN/ST=SH/L=shanghai/O=sh/OU=sh/CN=server/name=server/emailAddress=sh@cn.cn
+                serial:C4:4F:33:16:3A:39:59:0A
+
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+    Signature Algorithm: sha256WithRSAEncryption
+         42:1a:5d:03:9f:34:e1:9b:1b:a5:a6:84:39:d0:78:7a:ba:59:
+         e8:ef:fa:62:ee:1f:5c:81:aa:4b:fb:f5:0d:a7:7d:b1:9e:79:
+         a5:cd:9a:41:9f:fd:ef:c0:d6:7d:00:6d:e8:38:cc:3b:92:5b:
+         46:7b:44:28:c2:23:a0:f7:3d:4a:e6:f5:51:b5:56:c5:15:e2:
+         e1:a5:7b:e5:01:41:dc:ff:f7:13:0a:ad:c5:97:d6:11:01:34:
+         a2:3e:c0:60:ef:a1:ce:5b:8f:69:2a:25:b3:60:d0:e2:b6:1a:
+         b0:b7:0a:3b:69:b7:04:0b:ed:a1:a6:5c:b9:63:b6:d0:00:4e:
+         be:18:8a:ad:73:40:c6:07:7b:66:95:7e:ba:d9:29:b3:69:c3:
+         5a:ae:e6:e6:53:40:b5:90:7e:42:fb:1e:b3:ad:80:0d:eb:dd:
+         5a:0b:20:8f:fe:45:83:39:5b:42:21:d3:aa:aa:11:aa:30:a5:
+         61:a5:03:1a:b7:be:8a:3a:8c:ea:bc:d1:3a:39:d9:b9:8b:87:
+         2b:43:fc:e5:71:95:6f:46:59:4d:9d:60:61:90:6c:75:b3:ff:
+         87:5b:e4:69:a7:04:8f:7b:7f:8f:6f:0a:16:22:78:35:88:3d:
+         f0:75:40:bc:98:5c:cd:a9:8a:51:9d:8c:70:bb:3f:97:af:23:
+         9f:23:6a:78
+-----BEGIN CERTIFICATE-----
+MIIE1jCCA76gAwIBAgIBATANBgkqhkiG9w0BAQsFADCBgjELMAkGA1UEBhMCQ04x
+CzAJBgNVBAgTAlNIMREwDwYDVQQHEwhzaGFuZ2hhaTELMAkGA1UEChMCc2gxCzAJ
+BgNVBAsTAnNoMQ8wDQYDVQQDEwZzZXJ2ZXIxDzANBgNVBCkTBnNlcnZlcjEXMBUG
+CSqGSIb3DQEJARYIc2hAY24uY24wHhcNMTUxMjA1MDI1ODM4WhcNMjUxMjAyMDI1
+ODM4WjCBgjELMAkGA1UEBhMCQ04xCzAJBgNVBAgTAlNIMREwDwYDVQQHEwhzaGFu
+Z2hhaTELMAkGA1UEChMCc2gxCzAJBgNVBAsTAnNoMQ8wDQYDVQQDEwZzZXJ2ZXIx
+DzANBgNVBCkTBnNlcnZlcjEXMBUGCSqGSIb3DQEJARYIc2hAY24uY24wggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCxhaFLGnq9rlKvuondmJB9fshpZuPW
+4ZjotqMAJhxRdQT0WE1mz6lPKWx4H+8hnA7jIaest5v//NeqmZOWfDNPLb9SKMgQ
+nqy2WAjoDz/wGN6PuP1LMmjudxbnNvx6DYXmXI2wY3eZsqhG75O5VKgDZJ3Xii+5
+GvQ+7KZj10fLQzpAuQCq7uyCRe76IObDUxUrdewGTRYilPhDiH1egHZuwks2Zqyq
+7y/JyYMv2pd9FD/gL3Zy/ktP59GrhQXs61ox6keIbgXb6bXgDefvXgfmaIkkp+Mn
+EzFTGkGuwWICZu9QR+brBPwyefmKHwH0fFKP8qSo0Tx1M4vyHOysS4LBAgMBAAGj
+ggFTMIIBTzAJBgNVHRMEAjAAMBEGCWCGSAGG+EIBAQQEAwIGQDA0BglghkgBhvhC
+AQ0EJxYlRWFzeS1SU0EgR2VuZXJhdGVkIFNlcnZlciBDZXJ0aWZpY2F0ZTAdBgNV
+HQ4EFgQU+CenYypBCdCPnFVV8JNdBBzeqZcwgbcGA1UdIwSBrzCBrIAUzP1JE+X8
+WSC+/CXDXUbNPd+otaOhgYikgYUwgYIxCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJT
+SDERMA8GA1UEBxMIc2hhbmdoYWkxCzAJBgNVBAoTAnNoMQswCQYDVQQLEwJzaDEP
+MA0GA1UEAxMGc2VydmVyMQ8wDQYDVQQpEwZzZXJ2ZXIxFzAVBgkqhkiG9w0BCQEW
+CHNoQGNuLmNuggkAxE8zFjo5WQowEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0P
+BAQDAgWgMA0GCSqGSIb3DQEBCwUAA4IBAQBCGl0DnzThmxulpoQ50Hh6ulno7/pi
+7h9cgapL+/UNp32xnnmlzZpBn/3vwNZ9AG3oOMw7kltGe0QowiOg9z1K5vVRtVbF
+FeLhpXvlAUHc//cTCq3Fl9YRATSiPsBg76HOW49pKiWzYNDithqwtwo7abcEC+2h
+ply5Y7bQAE6+GIqtc0DGB3tmlX662SmzacNarubmU0C1kH5C+x6zrYAN691aCyCP
+/kWDOVtCIdOqqhGqMKVhpQMat76KOozqvNE6Odm5i4crQ/zlcZVvRllNnWBhkGx1
+s/+HW+RppwSPe3+PbwoWIng1iD3wdUC8mFzNqYpRnYxwuz+XryOfI2p4
+-----END CERTIFICATE-----

@@ -1,0 +1,24 @@
+#
+#
+#
+
+version: '3'
+
+services:
+
+    app:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/httpd
+        
+        restart: always
+
+        environment:
+            - TZ="Asia/Shanghai"
+       
+        volumes:
+            - logs/:/usr/local/apache2/logs
+            
+        ports:
+            - 80:80
+
+volumes:
+    logs:

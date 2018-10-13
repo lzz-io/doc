@@ -1,0 +1,26 @@
+# new
+environment:
+	- TZ=Asia/Shanghai
+# or
+	- TZ=CST-8
+
+
+
+
+
+
+
+##################################################################
+    volumes:
+      - /etc/localtime:/etc/localtime:ro #时区问题
+	  
+	  
+	  
+时间同步
+hub.docker.com上的镜像，包括自己构建的，基本上都是以utc时区作为默认时区，这样于host主机时间往往差8个小时。
+最好的解决方案是  挂载volumn   /etc/localtime 到  docker环境中，如果是docker命令，docker -v /etc/localtime:/etc/locaitime:ro ...
+如果是docker-compose.yml   添加volumes
+
+
+volumns:
+   - /etc/localtime:/etc/localtime:ro

@@ -1,0 +1,60 @@
+1 设置自启动的两个环境变量。 
+
+vi /etc/default/virtualbox 
+
+添加下面两行：    
+VBOXAUTOSTART_DB=/etc/vbox
+VBOXAUTOSTART_CONFIG=/etc/vbox/auto.conf
+
+2 配置启动用户
+
+# vi /etc/vbox/auto.conf添加下面内容：
+
+default_policy = deny
+vmuser= {
+	allow = true
+}
+
+（注：将 vmuser 替换成你实际的用户，这个用户加入了vboxusers组，用来操作 VBoxManage 的用户）
+
+3 修改 vbox 目录权限
+
+chgrp vboxusers /etc/vbox
+chmod 1775 /etc/vbox
+
+# exit完成以上操作后，退出 root，返回普通用户
+
+4 设置dbpath属性
+VBoxManage setproperty autostartdbpath /etc/vbox
+VBoxManage list systemproperties
+
+...
+Autostart database path:        /etc/vbox
+
+5 指定虚拟机自动启动
+
+# VBoxManage modifyvm centos --autostart-enabled on --autostop-type acpishutdown
+# VBoxManage modifyvm win10 --autostart-enabled on --autostop-type acpishutdown
+
+# VBoxManage modifyvm centos --autostart-enabled on --autostop-type disabled
+# VBoxManage modifyvm win10 --autostart-enabled on --autostop-type disabled
+
+VBoxManage modifyvm centos --autostart-enabled on
+VBoxManage modifyvm win10 --autostart-enabled on
+
+ls /etc/vbox
+
+可以看到生成了以用户名开始的两个文件
+vmuser.start  # vmuser.stop
+
+
+6 重启 vboxauto 服务
+
+service vboxautostart-service stop
+service vboxautostart-service start
+
+systemctl stop vboxautostart-service.service
+systemctl start vboxautostart-service.service
+
+
+

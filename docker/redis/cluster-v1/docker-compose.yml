@@ -1,0 +1,131 @@
+# 
+# 还没找到 docker stack deploy 下，固定容器ip的方式
+# 暂时不支持 docker stack deploy
+# docker-compose 方式部署
+# 
+
+version: '3'
+
+services:
+
+    # redis:
+    #     image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+    #     container_name: redis
+    #     restart: always
+        # environment:
+        #     - TZ=CST-8
+        # ports:
+        #     - 7000:6379
+        # volumes:
+        #      - ./data:/data
+        # networks:
+        #     mynet:
+        #         ipv4_address: 10.0.1.100
+
+        # network_mode: "bridge"
+
+
+        # deploy:
+        #     replicas: 6
+        #     labels: [APP=VOTING]
+        #     update_config:
+        #        ## 一次更新个数，默认1，建议1/2或1/3
+        #        parallelism: 2
+        #        # delay: 10s
+        #     restart_policy:
+        #        condition: on-failure
+        #     placement:
+        #             constraints: [node.hostname == c101]
+
+    redis1:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis1
+        restart: always
+        ports:
+            - 7001:6379
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.101
+
+    redis2:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis2
+        restart: always
+        ports:
+            - 7002:6379
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.102
+
+    redis3:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis3
+        restart: always
+        ports:
+            - 7003:6379
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.103
+
+    redis4:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis4
+        restart: always
+        ports:
+            - 7004:6379
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.104
+
+    redis5:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis5
+        restart: always
+        ports:
+            - 7005:6379
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.105
+
+    redis6:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis
+        container_name: redis6
+        restart: always
+        ports:
+            - 7006:6379
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.106
+
+
+    redis-management:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/redis:management
+        container_name: redis-management
+        restart: always
+        depends_on:
+            - redis1
+            - redis2
+            - redis3
+            - redis4
+            - redis5
+            - redis6
+        networks:
+            mynet:
+                ipv4_address: 10.0.1.200
+    # #    deploy:
+    # #        replicas: 1
+
+## for docker stack
+networks:
+    mynet:
+        external: true
+    # redis:
+    #     driver: overlay
+    #     ipam:
+    #         driver: default
+    #         config:
+    #             - subnet: 10.0.1.0/24
+    # default:
+    #    external:
+    #        name: mynet
+

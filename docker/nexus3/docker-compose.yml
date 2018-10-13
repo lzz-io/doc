@@ -1,0 +1,19 @@
+version: "2"
+
+services:
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    restart: always
+    privileged: true
+
+    volumes:
+      - "nexus-data:/nexus-data"
+    ports:
+      - "8081:8081"
+      # docker 私服端口,与nexus中设置一致
+      - "8088:8088"
+
+  
+volumes:
+  nexus-data: {}

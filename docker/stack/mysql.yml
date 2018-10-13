@@ -1,0 +1,47 @@
+version: '3.6'
+
+services:
+    mysql:
+        image: mysql
+        hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+        ports:
+            - 3306:3306
+        environment:
+            - TZ=CST-8
+            - MYSQL_ROOT_PASSWORD=123456
+            - character-set-server=utf8mb4
+            - collation-server=utf8mb4_unicode_ci
+
+        # command: mysql-server /data/mysql.conf
+
+        # volumes:
+        #     - ./mysql.conf:/data/mysql.conf
+        #     - mysql-data:/data
+
+        # networks:
+        #     mynet:
+
+        deploy:
+            replicas: 1
+            labels: [APP=mysql]
+            placement:
+                constraints: [node.hostname == node1]
+
+
+
+networks:
+    default:
+        # attachable: true
+        name: mynet
+        # external: true
+
+
+volumes:
+    mysql-data:
+
+    mongo-data:
+    mongo-conf:
+
+    rabbitmq-data:
+
+

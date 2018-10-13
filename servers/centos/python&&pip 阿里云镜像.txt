@@ -1,0 +1,4 @@
+python && pip
+将 python&&pip 目录中的文件上传到 ~ 目录下
+重新打开一个命令行！！！（必须，使阿里云镜像生效）
+python get-pip.py

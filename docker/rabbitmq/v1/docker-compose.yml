@@ -1,0 +1,111 @@
+# 
+# 
+# 
+
+version: '3'
+
+services:
+
+    # rabbitmq:
+    #     image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/rabbitmq
+    #     container_name: rabbitmq
+    #     # restart: always
+    #     # environment:
+    #     #     - TZ=CST-8
+    #     ports:
+    #         - 5672:5672
+    #         - 15672:15672
+    #     volumes:
+    #          - rabbitmq-data:/var/lib/rabbitmq
+    #     hostname: rabbitmq
+    #     networks:
+    #         mynet:
+        #         ipv4_address: 10.0.1.100
+
+        # network_mode: "bridge"
+
+        # deploy:
+        #     replicas: 6
+        #     labels: [APP=VOTING]
+        #     update_config:
+        #        ## 一次更新个数，默认1，建议1/2或1/3
+        #        parallelism: 2
+        #        # delay: 10s
+        #     restart_policy:
+        #        condition: on-failure
+        #     placement:
+        #             constraints: [node.hostname == c101]
+
+    rabbitmq1:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/rabbitmq
+        container_name: rabbitmq1
+        restart: always
+        environment:
+            # - RABBITMQ_NODENAME=rabbitmq1 # default rabbit
+            - RABBITMQ_ERLANG_COOKIE='qwertyuiop'
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - rabbitmq-data:/var/lib/rabbitmq
+        hostname: rabbitmq1
+        networks:
+            mynet:
+                ipv4_address: 10.0.2.101
+
+    rabbitmq2:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/rabbitmq
+        container_name: rabbitmq2
+        restart: always
+        environment:
+            # - RABBITMQ_NODENAME=rabbitmq2
+            - RABBITMQ_ERLANG_COOKIE='qwertyuiop'
+        ports:
+            - 5673:5672
+        #     - 15673:15672
+        volumes:
+            - rabbitmq-data:/var/lib/rabbitmq
+        hostname: rabbitmq2
+        depends_on:
+            - rabbitmq1
+        networks:
+            mynet:
+                ipv4_address: 10.0.2.102
+
+    rabbitmq3:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/rabbitmq
+        container_name: rabbitmq3
+        restart: always
+        environment:
+            # - RABBITMQ_NODENAME=rabbitmq3
+            - RABBITMQ_ERLANG_COOKIE='qwertyuiop'
+        ports:
+            - 5674:5672
+        #     - 15674:15672
+        volumes:
+            - rabbitmq-data:/var/lib/rabbitmq
+        hostname: rabbitmq3
+        depends_on:
+            - rabbitmq1
+        networks:
+            mynet:
+                ipv4_address: 10.0.2.103
+
+
+volumes:
+    rabbitmq-data:
+
+
+## for docker stack
+networks:
+    mynet:
+        external: true
+    # rabbitmq:
+    #     driver: overlay
+    #     ipam:
+    #         driver: default
+    #         config:
+    #             - subnet: 10.0.1.0/24
+    # default:
+    #    external:
+    #        name: mynet

@@ -1,0 +1,51 @@
+1、http://www.collab.net/downloads/subversion
+2、https://bitnami.com/stack/subversion
+
+##########
+centos 7.2 暂时有兼容问题，用centos6.8
+
+
+1、
+install jdk
+yum localinstall jdk-8u101-linux-x64.rpm -y
+echo 'export JAVA_HOME=/usr/java/default' >> /etc/profile
+echo 'export PATH=$JAVA_HOME/bin:$PATH' >> /etc/profile
+source /etc/profile
+
+
+2、3、4、
+groupadd svn
+useradd -g svn -M svn
+passwd svn
+
+cd /opt
+tar xvfz CollabNetSubversionEdge-5.1.4_linux-x86_64.tar.gz
+chown -R svn csvn 
+
+5、
+vi /etc/sudoers
+	root   ALL=(ALL)    ALL
+	svn    ALL=(ALL)    ALL
+	:wq!
+6、
+su svn
+
+7、
+cd csvn
+sudo -E bin/csvn install
+bin/csvn start
+sudo bin/csvn-httpd install
+bin/csvn console
+
+
+8、
+      The default administrator login is:
+
+      Address: http://localhost:3343/csvn
+      Username: admin
+      Password: admin
+
+	  
+#安装完成之后，svn服务不能启动，
+安装bitnami-subversion-1.9.4-0-linux-x64-installer.run，之后能启动，原因估计是svn路径问题，不想查原因了，烦~~~
+

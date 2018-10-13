@@ -1,0 +1,181 @@
+eclipse
+
+##################################
+eclipse 修改空格和"=" ";"自动上屏的问题
+需要 Eclipse Standard 版
+##################################
+1.先找到相关的插件
+打开Plug-ins View找到插件org.eclipse.jface.text,右键点击，选择import as Source Project，导入完成后，在你的workspace就可以看到这个project了
+2.修改代码
+在src/org/eclipse/jface/text/contentassist/CompletionProposalPopup.java文件中，找到这样一行代码
+char[] triggers = t.getTriggerCharacter();
+大约1371行左右
+if(contains(triggers,key))
+在那行if判断里面，eclipse会判断key(就是你按下的键)是否在triggers中，如果是那就触发下面的第一行提示上屏的代码，所以我们要做的就是把空格和=号排除就可以了：
+if(key!=0x20 && key!='.' && key!='=' && key!=';' && contains(triggers,key)){
+
+3.把修改好的org.eclipse.jface.text导出
+右键点击你的workspace里的org.eclipse.jface.text,选择export-->Deployable plugins and fragments, next,destination 选择archive file,然后finish.你就可以在zip文件里看到生成好的jar ,用它替换掉eclipse/plugins里面的同名jar包,就可以了
+
+大约1371行左右
+if(key!=0x20 && key!='.' && key!='=' && key!=';' && contains(triggers,key)){
+最后就是导出修改后的插件，右键点击你的workspace里的工程，
+选择Export－>Deployable plugins and fragments，
+点击Next，选择Destination选项卡，选择Directory，选择一个要保存插件的目录，然后Finish。
+然后就会在你所选的目录下产生一个新的plugins目录，里面有一个jar文件，
+用它替换掉eclipse/plugins里面的org.eclipse.jface.text_3.6.1.r361_v20100825-0800.jar(这个文件不同版本的Eclipse，后面的版本号会不一样，我用的Eclipse 3.6)，这样就大功告成了！
+
+
+########################################################
+get/set时携带注释给get/set
+org.eclipse.jdt.ui
+org.eclipse.jdt.internal.corext.codemanipulation.GetterSetterUtil 类下的
+ getSetterStub 及 getGetterStub 函数
+########################################################
+		if (addComments) {
+			String comment= CodeGeneration....
+			// 注释使用成员的注释
+			ISourceRange sr = field.getJavadocRange();
+			if( null != sr )
+				comment = field.getSource().substring( 0, sr.getLength() );
+			// 注释使用成员的注释
+		... ...
+
+
+########################################################
+jrebel 
+http://update.zeroturnaround.com/update-site/
+Eulox+KMJAqvVUYHPIZ6rXgh6F5B51J5k61cMpKjN476fMC1slkF9YrEueuGJvMMzO5ysLFBR+qZzQzIOsgitMkW0VYlXf45g34SKOPzaffvmEoBxD5bNlt2OC7Ra8WADfhzAg==
+########################################################
+Other Versions
+
+The latest release is always at http://update.zeroturnaround.com/update-site/.
+To install an older version, go to http://update.zeroturnaround.com/update-site-archive/ and select your desired version.
+Nightly builds are available from http://update.zeroturnaround.com/update-site-nightly/.
+
+########################################################
+spring sts
+可能需要 ajdt
+########################################################
+Update Sites
+4.3	http://dist.springsource.com/release/TOOLS/update/e4.3/
+4.2	http://dist.springsource.com/release/TOOLS/update/e4.2/
+3.8	http://dist.springsource.com/release/TOOLS/update/e3.8/
+3.7	http://dist.springsource.com/release/TOOLS/update/e3.7/
+
+
+########################################################
+hibernate tools 
+jboss tools
+########################################################
+http://tools.jboss.org/downloads/
+
+
+#######################################################
+# 指定jdk 
+# 修改完 加 -clean 参数重启一次eclipse
+########################################################
+在-vmargs 参数的前面，一定是前面
+分两行，格式不可变。
+-vm
+D:\Program Files\Java\jdk1.7.0_75\bin\javaw.exe
+####
+-product
+org.eclipse.epp.package.jee.product
+-vm
+D:\Program Files\Java\jdk1.7.0_75\bin\javaw.exe
+
+
+##################################################
+在使用Eclipse编写Java代码时，自动生成的注释信息都是默认是使用的当前登录系统用户名： 
+/** 
+* @author administrator 
+*/ 
+如果我们想修改成我们自己的名字怎么办呢?
+
+方法一. 修改Eclipse 启动参数 
+在Eclipse启动时加入启动参数或eclipse.ini中添加一句 
+	(-vmargs或者不加看前面有没有) -Duser.name=QQ:1219331697
+
+######################################################
+流程定义文件*.jpdl.xml中如果有中文乱码，肯定是task中有中文。
+
+需要在eclipse安装软件下，即E:\eclipse\eclipse.ini增加
+-Dfile.encoding=UTF-8
+然后重启eclipse即可解决。
+
+
+###############################################
+eclipse里的xml文件中的属性值的字体是斜体，不但打的时候不好看，而且很难观测出空格，给编程带来不少不便，有必要把斜体去掉。
+    右击编辑区域，Preferences，XML(这个视你的编程语言所定)，XML Files，Editor，Syntax Coloring。
+右边区域的下面有一个示例，应该有所有的例子的了，光标移到与你匹配的字体，Italic就是斜体的意思，把前面的勾去掉，就能去掉斜体了。
+############################################
+.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ(, @
+##############################################
+
+##############################################
+去掉拼写检查 spelling
+##############################################
+
+##############################################
+Java代码风格 formatter -- new -- line... 140
+##############################################
+
+##############################################
+内容辅助设置
+ assist
+ .abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ(, @
+##############################################
+
+
+##############################################
+导入注释模板
+E:\data\data\dev\eclipse注释模板.xml
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="gettercomment_context" deleted="false" description="Comment for getter method" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.gettercomment" name="gettercomment">/**
+ * @return the ${bare_field_name}
+ */</template><template autoinsert="true" context="settercomment_context" deleted="false" description="Comment for setter method" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.settercomment" name="settercomment">/**
+ * @param ${param} the ${bare_field_name} to set
+ */</template><template autoinsert="true" context="constructorcomment_context" deleted="false" description="Comment for created constructors" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.constructorcomment" name="constructorcomment">/**
+ * ${tags}
+ */</template><template autoinsert="false" context="filecomment_context" deleted="false" description="Comment for created Java files" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.filecomment" name="filecomment">/**
+ * Copyright qq:1219331697
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *     
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+</template><template autoinsert="true" context="typecomment_context" deleted="false" description="Comment for created types" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.typecomment" name="typecomment">/**
+ * @author ${user}
+ *
+ * ${tags}
+ */</template><template autoinsert="true" context="fieldcomment_context" deleted="false" description="Comment for fields" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.fieldcomment" name="fieldcomment">/**
+ * 
+ */</template><template autoinsert="true" context="methodcomment_context" deleted="false" description="Comment for non-overriding methods" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.methodcomment" name="methodcomment">/**
+ * ${tags}
+ */</template><template autoinsert="true" context="overridecomment_context" deleted="false" description="Comment for overriding methods" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.overridecomment" name="overridecomment">/* (non-Javadoc)
+ * ${see_to_overridden}
+ */</template><template autoinsert="true" context="delegatecomment_context" deleted="false" description="Comment for delegate methods" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.delegatecomment" name="delegatecomment">/**
+ * ${tags}
+ * ${see_to_target}
+ */</template><template autoinsert="true" context="newtype_context" deleted="false" description="Newly created files" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.newtype" name="newtype">${filecomment}
+${package_declaration}
+
+${typecomment}
+${type_declaration}</template><template autoinsert="true" context="classbody_context" deleted="false" description="Code in new class type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.classbody" name="classbody">
+</template><template autoinsert="true" context="interfacebody_context" deleted="false" description="Code in new interface type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.interfacebody" name="interfacebody">
+</template><template autoinsert="true" context="enumbody_context" deleted="false" description="Code in new enum type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.enumbody" name="enumbody">
+</template><template autoinsert="true" context="annotationbody_context" deleted="false" description="Code in new annotation type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.annotationbody" name="annotationbody">
+</template><template autoinsert="true" context="catchblock_context" deleted="false" description="Code in new catch blocks" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.catchblock" name="catchblock">// ${todo} Auto-generated catch block
+${exception_var}.printStackTrace();</template><template autoinsert="true" context="methodbody_context" deleted="false" description="Code in created method stubs" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.methodbody" name="methodbody">// ${todo} Auto-generated method stub
+${body_statement}</template><template autoinsert="true" context="constructorbody_context" deleted="false" description="Code in created constructor stubs" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.constructorbody" name="constructorbody">${body_statement}
+// ${todo} Auto-generated constructor stub</template><template autoinsert="true" context="getterbody_context" deleted="false" description="Code in created getters" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.getterbody" name="getterbody">return ${field};</template><template autoinsert="true" context="setterbody_context" deleted="false" description="Code in created setters" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.setterbody" name="setterbody">${field} = ${param};</template></templates>
+##############################################

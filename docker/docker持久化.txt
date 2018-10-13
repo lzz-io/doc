@@ -1,0 +1,25 @@
+#映射物理硬盘 
+docker service create \
+  -p 15672:15672 \
+  --mount type=bind,source=/rabbitmq,target=/var/lib/rabbitmq \
+  --name rabbitmq \
+  rabbitmq:3.6-management
+
+#映射docker volume
+docker service create \
+  -p 15672:15672 \
+  --mount type=volume,source=rabbitmq,target=/var/lib/rabbitmq \
+  --replicas 4 \
+  --name rabbitmq \
+  rabbitmq:3.6-management
+
+# NFS方式  
+#--mount后面不能断行
+docker service create --mount 'type=volume,volume-opt=o=addr=192.168.56.101,volume-opt=device=:/rabbitmq,volume-opt=type=nfs4,source=rabbitmq,target=/var/lib/rabbitmq' \
+  -p 15672:15672 \
+  --replicas 2 \
+  --name rabbitmq \
+  rabbitmq:3.6-management
+ 
+  
+  

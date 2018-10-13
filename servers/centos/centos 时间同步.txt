@@ -1,0 +1,2 @@
+yum install ntp -y
+ntpdate time.nist.gov

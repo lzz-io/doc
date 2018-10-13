@@ -1,0 +1,26 @@
+﻿http://jingyan.baidu.com/article/b2c186c8ffb607c46ff6ff61.html
+
+安装VirtualBox增强功能
+
+现在设置里面添加Windows端共享文件夹，功能在“设置”->“共享文件夹”内：
+1、点击”共享文件夹路径“选择需要共享的文件夹（确保不为空），比如D:\www
+2、输入“共享文件夹名称”，名称建议和文件夹名不一致比如htdoc
+3、选择“自动挂载”和“固定分配”（此处有误，不建议选择自动挂载）
+
+#/etc/fstab
+#C_DRIVE     /c                       vboxsf     defaults        0 0
+mkdir /c
+echo "C_DRIVE     /c                       vboxsf     defaults        0 0" >> /etc/fstab
+mount -a
+ls /c
+
+
+###############################
+# end
+###############################
+
+#for test
+mount -t vboxsf C_DRIVE /c
+ls /c
+
+

@@ -1,0 +1,14 @@
+查看进程，按内存从大到小	
+ps -e -o "%C : %p : %z : %a"|sort -k5 -nr			
+
+查看进程，按CPU利用率从大到小排序	
+ps -e -o "%C : %p : %z : %a"|sort -nr		
+
+查看剩余内存	
+free -m |grep "Mem" | awk "{print $2}"		
+
+查看磁盘占用	
+df -h		
+
+获取环境变量中path路径	
+echo ${PATH}	获取agent执行脚本时的环境变量中path路径	

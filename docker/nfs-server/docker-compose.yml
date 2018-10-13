@@ -1,0 +1,58 @@
+#
+#
+#
+
+version: '3'
+
+services:
+
+    app:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/nfsserver
+        #container_name: nfs
+        
+        #restart: always
+
+        environment:
+            #- TZ="Asia/Shanghai"
+            - TZ=CST-8
+
+        ## container内的root拥有真正的root权限。
+        ## 否则，container内的root只是外部的一个普通用户权限。
+        ## privileged启动的容器，可以看到很多host上的设备，并且可以执行mount。
+        ## 用于容器内部使用 systemctl 命令等
+        privileged: true
+       
+
+        volumes:
+            - nfs-data:/data
+            
+        ports:
+            - 111:111
+            - 111:111/udp
+            - 2049:2049
+            - 2049:2049/udp
+
+        ## for docker stack
+        #networks:
+        #    - ingress
+
+        ## for docker-compose
+        ## 不能使用别名 alias
+        network_mode: "bridge"
+
+        ##
+        #depends_on:
+        #    - mysql
+
+        ## 往/etc/hosts文件中添加一些记录
+        #extra_hosts:
+        #    - "gateway:192.168.1.1"
+
+volumes:
+    nfs-data: {}
+
+
+## for docker stack
+#networks:
+#    ingress:
+#        external: true

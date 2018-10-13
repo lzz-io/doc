@@ -1,0 +1,106 @@
+ambari 集群安装工具
+https://zh.hortonworks.com/downloads/#data-platform
+https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.2.0/bk_ambari-installation/content/download_the_ambari_repo_lnx7.html
+
+ambari-server setup
+The default PostgreSQL database name is ambari. The default user name and password are ambari/bigdata
+
+chkconfig --add ambari-server
+chkconfig --list ambari-server
+
+ambari-server start
+ambari-server status
+ambari-server stop
+
+http://<your.ambari.server>:8080
+default user name/password: admin/admin
+
+制作离线安装源
+http://www.cnblogs.com/tynia/p/offline-ambari.html
+新下载的centos7
+安装 createrepo，用于制作源
+yum install createrepo
+安装java （推荐 java 1.7以上版本，如果有，则跳过此步骤）
+yum install java
+安装高版本的openssl(各个host都需要安装，否则在ambari中安装服务的时候，会注册失败)
+yum install openssl
+安装nc和redhat-lsb（hadoop和hbase都有依赖）
+yum install nc
+yum install redhat-lsb
+安装 gcc，python-devel，python-libs 这类要成套
+yum install gcc
+yum install python-devel
+yum install python-libs
+
+##############################
+#yum install createrepo -y
+#yum install openssl -y
+#yum install nc -y
+#yum install redhat-lsb -y
+#yum install gcc -y
+#yum install python-devel -y
+#yum install python-libs -y
+yum install httpd -y
+yum install yum-utils createrepo -y
+
+mkdir -p /var/www/html/
+#非必须
+vi /etc/httpd/conf/httpd.conf
+<Directory />
+    AllowOverride none
+    #Require all denied
+	Require all granted
+</Directory>
+#################################
+
+https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.2.0/bk_ambari-installation/content/ambari_repositories.html
+https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.2.0/bk_ambari-installation/content/hdp_26_repositories.html
+
+下载服务包：
+
+下载Amabri：
+wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.2.0/ambari.repo -O /etc/yum.repos.d/ambari.repo
+#同步
+yum repolist
+cd /var/www/html
+mkdir -p ambari/centos7
+cd ambari/centos7
+reposync -r ambari-2.5.2.0
+
+下载HDP 和HDP-UTILS： 
+wget -nv http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.2.0/hdp.repo -O /etc/yum.repos.d/hdp.repo
+#同步
+yum repolist
+cd /var/www/html
+mkdir -p hdp/centos7
+cd hdp/centos7
+reposync -r HDP-2.6.2.0
+reposync -r HDP-UTILS-1.1.0.21
+
+制作离线源：
+createrepo /var/www/html/ambari/centos7/ambari-2.5.2.0
+createrepo /var/www/html/hdp/centos7/HDP-HDP-2.6.2.0
+createrepo /var/www/html/hdp/centos7/HDP-UTILS-1.1.0.21
+
+mkdir -p /var/www/html/
+yum repolist
+cd /var/www/html
+mkdir -p ambari/centos7
+cd ambari/centos7
+reposync -r ambari-2.5.2.0
+
+yum repolist
+cd /var/www/html
+mkdir -p hdp/centos7
+cd hdp/centos7
+reposync -r HDP-UTILS-1.1.0.21
+reposync -r HDP-2.6.2.0
+
+createrepo /var/www/html/ambari/centos7/ambari-2.5.2.0
+createrepo /var/www/html/hdp/centos7/HDP-2.6.2.0
+createrepo /var/www/html/hdp/centos7/HDP-UTILS-1.1.0.21
+
+
+Cloudera Manager
+http://blog.csdn.net/qiyongkang520/article/details/50830929
+

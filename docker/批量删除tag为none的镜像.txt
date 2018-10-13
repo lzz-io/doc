@@ -1,0 +1,7 @@
+# new
+docker system prune -f
+
+
+# 批量删除tag为none的镜像
+docker images|grep none|awk '{print $3}'|xargs docker rmi -f
+docker images -a

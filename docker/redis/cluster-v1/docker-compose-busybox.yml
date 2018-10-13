@@ -1,0 +1,54 @@
+# 
+# 
+# 
+
+version: '3'
+
+services:
+
+    busybox:
+        image: busybox
+        container_name: busybox
+        restart: always
+        # environment:
+        #     - TZ=CST-8
+        # ports:
+        #     - 7000:6379
+        # volumes:
+        #      - ./data:/data
+        networks:
+            mynet:
+                ipv4_address: 10.0.0.100
+
+        command: sleep 10000000000
+
+        # network_mode: "bridge"
+
+
+        # deploy:
+        #     replicas: 6
+        #     labels: [APP=VOTING]
+        #     update_config:
+        #        ## 一次更新个数，默认1，建议1/2或1/3
+        #        parallelism: 2
+        #        # delay: 10s
+        #     restart_policy:
+        #        condition: on-failure
+        #     placement:
+        #             constraints: [node.hostname == c101]
+
+
+## for docker stack
+networks:
+    mynet:
+        external: true
+    # redis:
+    #     driver: overlay
+    #     ipam:
+    #         driver: default
+    #         config:
+    #             - subnet: 10.0.1.0/24
+    # default:
+    #    external:
+    #        name: mynet
+

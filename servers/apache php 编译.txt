@@ -1,0 +1,63 @@
+##############################################
+# apache 
+##############################################
+
+make clean
+./configure --enable-so --enable-ssl --enable-mods-shared=all --enable-deflate --enable-ssl --enable-mpms-shared=all
+make; make install
+
+#!/bin/bash
+#
+# httpd        Startup script for the Apache HTTP Server
+#
+# chkconfig: 2345 85 15
+# description: The Apache HTTP Server 
+#
+
+\cp /opt/apache2/bin/apachectl /etc/init.d/httpd
+chkconfig --add httpd
+chkconfig httpd on
+chkconfig --list httpd
+service httpd start
+
+
+./configure --enable-so --enable-ssl --enable-cgi \
+--enable-rewrite --enable-deflate --with-z --with-pcre \
+--with-apr=/opt/lib/apr --with-apr-util=/opt/lib/apr/ \
+--enable-modules=most --enable-mpms-shared=all \
+--with-mpm=event
+
+静态的模块通常是<ifmodule></ifmodule> 来配置， 动态使用loadmoule来加载，然后再配置。
+官方说静态的比动态的在性能方面多5%左右。
+--enable-modules 静态
+--enable-mods-shared=all 动态
+--enable-deflate 静态
+--enable-deflate=shared 动态
+
+
+##############################################
+# php 
+##############################################
+
+make clean
+./configure --prefix=/opt/php --with-config-file-path=/opt/php/etc \
+--with-apxs2=/opt/apache2/bin/apxs \
+--with-mysql --with-mysqli \
+--enable-pdo --with-pdo-mysql \
+--with-iconv-dir --with-freetype-dir --with-jpeg-dir --with-png-dir \
+--with-zlib --enable-zip --with-curl \
+--with-libxml-dir --enable-mbstring --with-mcrypt --with-mhash \
+--with-gd --enable-gd-native-ttf \
+--with-bz2 --enable-exif --with-openssl
+make; make install
+
+cp php.ini-production /opt/php/etc/php.ini
+cp php.ini-development /opt/php/etc/php.ini
+
+http://blog.csdn.net/niluchen/article/details/41513217
+http://www.cnblogs.com/z-ping/archive/2012/06/18/2553929.html
+
+
+date.timezone = Asia/Shanghai
+
+

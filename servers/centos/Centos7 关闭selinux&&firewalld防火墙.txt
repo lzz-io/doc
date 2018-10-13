@@ -1,0 +1,11 @@
+关闭selinux
+1、如果要临时关闭，可以执行
+	setenforce 0
+	
+2、如果要永久关闭，可以修改配置文件/etc/selinux/config，将SELINU置为disabled。
+sed -i '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
+cat /etc/selinux/config
+
+#关闭防火墙
+systemctl stop firewalld.service
+systemctl disable firewalld.service

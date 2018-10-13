@@ -1,0 +1,6 @@
+
+主机名		IP地址			进程
+c101	192.168.56.101	ResourceManager, DataNode, NodeManager, WebAppProxyServer
+c102	192.168.56.102	NameNode, DataNode, NodeManager,JobHistoryServer
+c103	192.168.56.103	SencodaryNameNode, DataNode, NodeManager
+

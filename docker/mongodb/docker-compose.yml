@@ -1,0 +1,29 @@
+#
+#
+#
+
+version: '3'
+
+services:
+
+    db:
+        image: mongo        
+        restart: always
+        environment:
+            - TZ="CST-8"        
+        ports:
+            - 37017:27017
+        volumes:
+          - mongo-data:/data/db
+          - mongo-configdb:/data/configdb
+
+
+    # adminer:
+    #     image: adminer
+    #     ports:
+    #         - 18080:8080
+
+
+volumes:
+    mongo-data:
+    mongo-configdb:

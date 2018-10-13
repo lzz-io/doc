@@ -1,0 +1,32 @@
+http://jingyan.baidu.com/article/0f5fb099131f306d8234ea53.html
+
+1、分区
+	fdisk -l /dev/sdb
+	p查看、n新建、t类型、l查看类型、p查看、w保存
+
+2、创建物理卷（PV）
+	使用 pvcreate 命令创建物理卷，pvdisplay 查看物理卷信息
+	
+3、将PV加入卷组（VG）
+	使用 vgdisplay 查看卷组信息，下图显示卷组名为centos，空闲大小为0：
+	使用 vgextend 命令把/dev/vdb1加入到centos
+
+4、创建逻辑卷（LV）（动态调整根分区，可跳过这步）
+	使用 lvcreate 命令从卷组里划分一个新的逻辑卷，
+	这里创建了名称为quan，大小4GB的逻辑卷分区；
+	使用lvdisplay 查看逻辑卷信息：
+
+5、格式化逻辑卷并挂载 （动态调整根分区，可跳过这步）
+	新逻辑卷经过格式化就可以挂载到系统里存储数据了。
+	使用 mkfs.xfs 格式化为CentOS7的xfs文件系统
+	
+6、挂载到/mnt目录下（你可以挂载到自己需要的目录下） （动态调整根分区，可跳过这步）
+
+7、设置开机自动挂载，编辑 /etc/fstab 文件 （动态调整根分区，可跳过这步）
+
+8、逻辑卷扩容
+	使用 lvextend 命令进行逻辑卷扩容。我把所有剩余空间都分配给了root
+	lvextend -l +100% FREE /dev/centos/root
+	使用 xfs_growfs 命令在线调整xfs格式文件系统大小
+	xfs_growfs /dev/centos/root
+	最后我们看到逻辑卷分区已经动态扩容到了10GB

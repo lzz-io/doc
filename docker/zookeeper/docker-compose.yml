@@ -1,0 +1,103 @@
+version: '3'
+
+services:
+
+    # zookeeper:
+        # image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/zookeeper
+        # container_name: zookeeper
+        # restart: always
+        # environment:
+        #     - TZ=CST-8
+        # ports:
+        #     - 2181:2181
+        # volumes:
+        #      - zookeeper-data:/data
+        # networks:
+        #     mynet:
+        #         ipv4_address: 10.0.1.100
+
+        # network_mode: "bridge"
+
+        # deploy:
+        #     replicas: 6
+        #     labels: [APP=zookeeper]
+        #     update_config:
+        #        ## 一次更新个数，默认1，建议1/2或1/3
+        #        parallelism: 2
+        #        # delay: 10s
+        #     restart_policy:
+        #        condition: on-failure
+        #     placement:
+        #             constraints: [node.hostname == c101]
+
+    zoo1:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/zookeeper
+        container_name: zookeeper1
+        restart: always
+        hostname: zoo1
+        ports:
+            - 2181:2181
+        environment:
+            ZOO_MY_ID: 1
+            ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+        volumes:
+             - zookeeper-data1:/data
+             - zookeeper-log1:/datalog
+        networks:
+            mynet:
+
+    zoo2:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/zookeeper
+        container_name: zookeeper2
+        restart: always
+        hostname: zoo2
+        ports:
+            - 2182:2181
+        environment:
+            ZOO_MY_ID: 2
+            ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+        volumes:
+             - zookeeper-data2:/data
+             - zookeeper-log2:/datalog
+        networks:
+            mynet:
+
+    zoo3:
+        image: registry-vpc.cn-hongkong.aliyuncs.com/io-lzz/zookeeper
+        container_name: zookeeper3
+        restart: always
+        hostname: zoo3
+        ports:
+            - 2183:2181
+        environment:
+            ZOO_MY_ID: 3
+            ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+        volumes:
+             - zookeeper-data3:/data
+             - zookeeper-log3:/datalog
+        networks:
+            mynet:
+
+volumes:
+    zookeeper-data1:
+    zookeeper-log1:
+    zookeeper-data2:
+    zookeeper-log2:
+    zookeeper-data3:
+    zookeeper-log3:
+
+
+## for docker stack
+networks:
+    mynet:
+        external: true
+    # zookeeper:
+    #     driver: overlay
+    #     ipam:
+    #         driver: default
+    #         config:
+    #             - subnet: 10.0.1.0/24
+    # default:
+    #    external:
+    #        name: mynet
+

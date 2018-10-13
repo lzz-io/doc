@@ -1,0 +1,224 @@
+###############################################
+# 远程访问
+###############################################
+use mysql;
+DELETE FROM user;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'admin888' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'lzz'@'%' IDENTIFIED BY 'admin888' WITH GRANT OPTION;
+GRANT SHUTDOWN ON *.* TO 'multi_admin'@'localhost' IDENTIFIED BY 'multipass';
+GRANT REPLICATION SLAVE ON *.* to 'repli_admin'@'%' identified by 'repli_pass';
+flush privileges;
+select host,user,password from user;
+
+
+# 删除anonymous账号，生存环境必须
+DELETE FROM user WHERE User = '';
+DELETE FROM user;
+
+drop user? 带权限删除
+
+select host,user,password from user;
+
+# 改root密码
+update user set password=PASSWORD('admin888') where User='root';
+
+# %代表任何主机，包括远程
+# update user set host = '%' where user = 'root';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'admin888' WITH GRANT OPTION;
+
+select host,user,password from user;
+
+# 授权新用户
+GRANT ALL PRIVILEGES ON *.* TO 'lzz'@'%' IDENTIFIED BY 'admin888' WITH GRANT OPTION;
+
+GRANT ALL PRIVILEGES ON *.* TO 'xgqq_admin'@'%' IDENTIFIED BY 'xgqq_admin';
+
+# 多实例 关闭服务 用户
+GRANT SHUTDOWN ON *.* TO 'multi_admin'@'localhost' IDENTIFIED BY 'multipass';
+
+# 主从同步账号
+# 生产环境用 IP
+#GRANT REPLICATION SLAVE ON *.* to 'repli_admin'@'192.168.100.101' identified by 'repli_pass';
+GRANT REPLICATION SLAVE ON *.* to 'repli_admin'@'%' identified by 'repli_pass';
+
+
+# 刷新MySQL的系统权限相关表，否则会出现拒绝访问; 还有一种方法，就是重新启动mysql服务器
+flush privileges;
+
+###############################################
+# 字符集
+###############################################
+SHOW VARIABLES LIKE 'character%';
+
+###############################################
+# 源码编译
+###############################################
+yum install cmake ncurses-devel -y
+rm -f CMakeCache.txt
+cmake . -DCMAKE_INSTALL_PREFIX=/opt/mysql/
+make
+#make install
+#make install DESTDIR="/opt/mysql"
+
+###############################################
+# 单实例
+###############################################
+# 5.6,Before MySQL 5.7.6
+groupadd mysql
+useradd -r -g mysql -s /bin/false mysql
+cd /opt/mysql
+mkdir data
+chown -R mysql .
+chgrp -R mysql .
+scripts/mysql_install_db --user=mysql --datadir=/opt/mysql/data/3306
+chown -R root .
+chown -R mysql data
+bin/mysqld_safe --user=mysql --datadir=/opt/mysql/data/3306 &
+bin/mysqld_safe --user=mysql --datadir=/opt/mysql/data/3306 --skip-grant-tables &
+
+
+# Next command is optional
+# chkconfig: 2345 36 36
+# description: mysqld 3306
+basedir=/opt/mysql
+datadir=/opt/mysql/data/3306
+
+\cp support-files/mysql.server /etc/init.d/
+chkconfig --add mysql.server
+service mysql.server start
+
+# 环境变量
+\cp /etc/profile /etc/profile.bak
+echo 'export PATH=/opt/mysql/bin:$PATH' >> /etc/profile
+source /etc/profile
+#PATH=/opt/apache2/bin:/opt/mysql/bin:/opt/dev/subversion/bin:$PATH
+#export PATH
+# source /etc/profile
+# echo $PATH
+
+
+
+###############################################
+# 多实例
+###############################################
+# 大bug mysqld_multi 无法关闭实例
+# 修改 mysqld_multi，大概216行，'my_print_defaults -s'
+# 把 my $com= join ' ', 'my_print_defaults', @defaults_options, $group;
+# 替换为： my $com= join ' ', 'my_print_defaults -s', @defaults_options, $group;
+###############################################
+
+# scripts/mysql_install_db --user=mysql --datadir=/opt/mysql/data/3306
+mkdir logs
+cp -Rp data/3306 data/3300
+cp -Rp data/3306 data/3301
+cp -Rp data/3306 data/3302
+chown -R mysql .
+chgrp -R mysql .
+chown -R root .
+chown -R mysql data
+
+mysqld_multi --defaults-file=/opt/mysql/my_multi.cnf start
+mysqld_multi --defaults-file=/opt/mysql/my_multi.cnf stop
+#mysqld_multi --defaults-extra-file=/opt/mysql/my_multi.cnf start
+--no-defaults 不读取任何选项文件
+--print-defaults 打印从选项文件中获得的程序名和所有选项
+--defaults-file=path_name 只使用给出的选项文件。path_name是文件的全路径名
+--defaults-extra-file=path_name 在全局选项文件后但在用户选项文件前读该选项文件。path_name是文件的全路径名
+
+mysql -u root -S /tmp/mysql.sock3306 -p
+mysql -u root -S /tmp/mysql.sock3302
+
+mysqladmin -u multi_admin -S /tmp/mysql.sock3306 shutdown -pmultipass
+mysqladmin -u multi_admin -S /tmp/mysql.sock3302 shutdown -pmultipass
+
+# support-files/mysqld_multi.server
+# chkconfig: 2345 36 36
+# description: mysqld 3306
+
+cd /opt/mysql
+basedir=/opt/mysql
+bindir=/opt/mysql/bin
+conf=/opt/mysql/my_multi.cnf 
+export PATH=$bindir:$PATH
+
+"$mysqld_multi" --defaults-file=$conf start $2
+"$mysqld_multi" --defaults-file=$conf stop $2
+"$mysqld_multi" --defaults-file=$conf report $2
+
+# \,f 不提示覆盖
+\cp -rf support-files/mysqld_multi.server /etc/init.d/
+chkconfig --add mysqld_multi.server
+chkconfig --list mysqld_multi.server
+service mysqld_multi.server start
+service mysqld_multi.server report
+service mysqld_multi.server stop
+service mysqld_multi.server report
+
+
+###############################################
+# 主从复制
+###############################################
+# 一对多关系，只能有一个主，可以有多个从
+###############################################
+# 主从同步账号
+# 生产环境用 IP
+#GRANT REPLICATION SLAVE ON *.* to 'repli_admin'@'192.168.100.101' identified by 'repli_pass';
+GRANT REPLICATION SLAVE ON *.* to 'repli_admin'@'%' identified by 'repli_pass';
+
+# 刷新MySQL的系统权限相关表，否则会出现拒绝访问; 还有一种方法，就是重新启动mysql服务器
+flush privileges;
+
+# 主库 3306
+mysql -uroot -padmin888 -S /tmp/mysql.sock3306
+
+show master status;
+# 记下 File 和 Position
+
+# 从库 3300 <== 3306
+mysql -uroot -padmin888 -S /tmp/mysql.sock3300
+
+stop slave;
+change master to master_host='127.0.0.1',master_port=3306,master_log_file='mysql-bin.000001',master_log_pos=120,master_user='repli_admin',master_password='repli_pass';
+start slave;
+show slave status\G;
+
+# 3301 <== 3306
+mysql -uroot -padmin888 -S /tmp/mysql.sock3301
+
+stop slave;
+change master to master_host='127.0.0.1',master_port=3306,master_log_file='mysql-bin.000001',master_log_pos=120,master_user='repli_admin',master_password='repli_pass';
+start slave;
+show slave status\G;
+
+# 3302 <== 3306
+mysql -uroot -padmin888 -S /tmp/mysql.sock3302
+
+stop slave;
+change master to master_host='127.0.0.1',master_port=3306,master_log_file='mysql-bin.000001',master_log_pos=120,master_user='repli_admin',master_password='repli_pass';
+start slave;
+show slave status\G;
+
+###########
+# 3306 <== 3300
+# 实际意义不大，还有数据一致性问题，如果真到大数据的时候，应该考虑大数据解决方案
+mysql -uroot -padmin888 -S /tmp/mysql.sock3306
+
+stop slave;
+change master to master_host='127.0.0.1',master_port=3300,master_log_file='mysql-bin.000001',master_log_pos=120,master_user='repli_admin',master_password='repli_pass';
+start slave;
+show slave status\G;
+
+# 手动删除 log-bin 日志
+# http://dev.mysql.com/doc/refman/5.6/en/purge-binary-logs.html
+PURGE BINARY LOGS TO 'mysql-bin.010';
+PURGE BINARY LOGS BEFORE '2017-01-01 00:00:00';
+
+##################
+# 不能同步
+##################
+# 不一定会有效果，那就重新做一次复制
+stop slave;
+set global sql_slave_skip_counter =1 ;
+start slave;
+
+

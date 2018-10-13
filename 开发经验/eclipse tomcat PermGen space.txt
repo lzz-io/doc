@@ -1,0 +1,48 @@
+﻿linux 带引号
+JAVA_OPTS="-server -Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=1024m -XX:-UseSplitVerifier" 
+windows 不带引号
+set JAVA_OPTS=-server -Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=1024m -XX:-UseSplitVerifier
+-XX:-UseSplitVerifier play需要加这个参数
+
+# catalina.bat
+setlocal
+
+set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_80
+set CATALINA_HOME=C:\a\opt\apache-tomcat-8.0.30
+set JAVA_OPTS=-server -Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=1024m -XX:-UseSplitVerifier
+############################################
+
+-Xms1024m -Xmx1024m -XX:MaxNewSize=1024m -XX:MaxPermSize=1024m
+-Dspring.profiles.active=dev
+
+URIEncoding="UTF-8"
+<Connector port="8009" URIEncoding="UTF-8" enableLookups="false" redirectPort="8443" protocol="AJP/1.3" />
+
+http://lvjava.com/?p=383
+
+解决方案为通过添加下面的参数增加分配给JVM的内存空间
+-Xms1024m -Xmx1024m -XX:MaxNewSize=1024m -XX:MaxPermSize=1024m
+
+网上的解决方案多半是针对纯Tomcat的情况，并非通过Eclipse启动的Tomcat。
+或者修改eclipse.ini配置文件，不过这些方法都不适合Eclipse运行Tomcat抛出该异常的情况。
+
+修改eclipse.ini配置文件增大的是Ecipse开发平台本身运行的JVM的空间，并非Eclipse启动Tomcat的内存空间。
+
+正确的方法是，点击“Run” – “Run Configurations…”，选中Tomcat Server，进入Arguments分页，在VM arguments中加入提升初始分配空间的参数
+
+###############################################
+-Dspring.profiles.active="dev"
+激活<beans profile="dev">
+###############################################
+Windows修改catalina.bat文件
+set JAVA_OPTS=-server -Xms1024m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m
+
+#将下面参数放在JVM中,如果是TOMCAT则放在catalina.sh
+#开发:
+JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev "
+
+#测试:
+JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=test "
+
+#如果是ECLIPSE中启动TOMCAT，则只需加
+-Dspring.profiles.active=dev

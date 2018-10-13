@@ -1,0 +1,48 @@
+
+# VBoxManage modifyhd 目标磁盘 --resize 调整后文件的大小（MB）
+
+cd C:\Program Files\Oracle\VirtualBox
+
+VBoxManage modifyhd "C:\Users\tom\VirtualBox VMs\c103-go\c103-go.vdi" --resize 20480
+
+
+"C:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd "C:\Users\tom\VirtualBox VMs\c103-go\c103-go.vdi" --resize 20480
+
+
+################
+# lvm
+#
+#	 	/	/home	/...			#文件系统,ext3,ext4,xfs,...
+#				^^					#
+#				||					#
+#			lv 	lv 	...				#lvdisplay	lvcreate 
+#				^^					#
+#				||					#
+#				vg					#vgdisplay 	vgextend 
+#				^^					#
+#				||					#
+#		pv	pv	pv	...	/boot		#pvcreate	pvdisplay 	pvresize 
+#
+################
+
+fdisk -l
+ls /dev/
+df -TH
+lvs
+lsblk
+
+fdisk /dev/sda
+d n t 8e w
+# reboot
+partprobe
+
+
+pvresize /dev/sda2
+vgdisplay
+lvdisplay
+lvresize -l +100%FREE /dev/cl/root
+lvdisplay
+#resize2fs /dev/cl/root ext3,ext4
+#xfs_growfs 命令在线调整xfs格式文件系统大小
+xfs_growfs /dev/cl/root
+

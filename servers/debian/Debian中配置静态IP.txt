@@ -1,0 +1,20 @@
+一共涉及两个文件的修改
+/etc/network/interfaces
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet static
+address 192.168.56.201
+netmask 255.255.255.0
+gateway 192.168.56.1
+
+
+# 非上网接口，可不设置
+/etc/resolv.conf 里面设置DNS服务器，在这种情况下应该就是gateway的地址
+nameserver 192.168.56.1            #因为我这里网关就是DNS服务器所以是相同的
+
+
+
+最后
+reboot
+或者
+/etc/init.d/networking restart 

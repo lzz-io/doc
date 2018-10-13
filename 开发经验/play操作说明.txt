@@ -1,0 +1,44 @@
+===============================================================================
+生成Eclipse项目
+1.启动命令行，输入play new <项目名>，Play会在当前路径下创建项目。
+2.输入play eclipsify <项目名>，Play会在项目目录中创建eclipse需要的配置文件，将其转换成eclipse项目。
+3.在eclipse中导入创建的项目。
+
+===============================================================================
+调试
+Play转换eclipse项目时，在eclipse目录中生成了三个启动配置：
+
+JPDA：连接到已经启动的Play Server，实现alive调试
+helloworld：本地运行
+Test：测试
+选中它们，右键执行Run As，即可完成相应的任务。
+
+===============================================================================
+本地调试
+直接Debug As 执行helloworld会报错：
+Error occurred during initialization of VM
+agent library failed to init: jdwp
+ERROR: Cannot load this JVM TI agent twice, check your java command line for duplicate jdwp options.
+
+需要：
+打开helloworld.launch,找到
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Dplay.debug=yes -Dplay.id= -Dapplication.path  …/>
+将-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n 去掉。
+然后Debug As,即可成功启动调试。附加Play源码后，即可调试Play本身。
+
+===============================================================================
+部署到tomcat
+play war [项目所在绝对路径] -o [生成的war包名称（包括路径）]
+
+
+===============================================================================
+类似java.lang.VerifyError: Expecting a stack map frame的解决方法
+JDK 1.7调整了JVM的一些参数。解决方法很简单，如果在使用Eclipse，那么：
+“If  in eclipse, go to Window -> Preferences -> Installed JREs 
+-> and add the default parameter . 
+If still does not work, go deeper, 
+that is Window -> Preferences -> Installed JREs ->edit 
+the default jre -> add “-XX:-UseSplitVerifier” in JVM argument”
+
+使用Ant进行编译和运行，可以在Build.xml中增加这样一行：
+<jvmarg line="-XX:-UseSplitVerifier" />

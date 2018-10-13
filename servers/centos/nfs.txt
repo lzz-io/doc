@@ -1,0 +1,69 @@
+###############################
+#服务端
+
+#一、安装 NFS 服务器所需的软件包
+yum install -y nfs-utils
+
+#二、编辑exports文件，添加从机
+mkdir /data
+echo "#rw表示可读写；sync表示同步写，fsid=0表示将/data找个目录包装成根目录,no_root_squash–允许root访问,no_all_squash-允许用户授权" >> /etc/exports
+echo "/data 192.168.56.0/24(rw,sync,fsid=0,no_root_squash,no_subtree_check)" >> /etc/exports
+
+#使配置生效 
+exportfs -r
+
+#三、启动nfs服务
+#先为rpcbind和nfs做开机启动：
+systemctl enable rpcbind.service
+systemctl enable nfs-server.service
+
+#然后分别启动rpcbind和nfs服务：
+systemctl start rpcbind.service
+systemctl start nfs-server.service
+
+#确认NFS服务器启动成功：
+rpcinfo -p
+
+#检查 NFS 服务器是否挂载我们想共享的目录 /data：
+exportfs
+#可以查看到已经ok
+#/data           192.168.56.0/24
+
+
+
+###############################
+#客户端
+#四、在从机上安装NFS 客户端
+#注意：客户端不需要启动nfs服务
+
+#首先是安裝nfs
+yum install -y nfs-utils
+
+#先为rpcbind做开机启动：
+systemctl enable rpcbind.service
+
+#然后启动rpcbind服务
+systemctl start rpcbind.service
+
+#检查 NFS 服务器端是否有目录共享：
+showmount -e 192.168.56.101
+
+#在从机上使用 mount 挂载服务器端的目录/data到客户端某个目录下：
+mkdir /data
+mount -t nfs4 192.168.56.101:/    /data
+#查看是否挂载成功
+df -h
+
+#想在客户机上实现开机挂载，则需要编辑/etc/fstab：
+echo "192.168.56.101:/ /data nfs4 defaults 0 0" >> /etc/fstab
+
+
+
+
+
+
+
+
+
+
+

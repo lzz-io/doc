@@ -1,0 +1,36 @@
+
+
+1、dns设置 阿里dns ：223.5.5.5 223.6.6.6
+#显示当前网络连接
+nmcli connection show
+#名称    UUID                                  类型            设备
+#enp0s3  e4b40225-1f7b-49b6-8882-c3d11a54c20c  802-3-ethernet  enp0s3
+#enp0s8  825862b5-2fe8-48ce-aab2-12e2b17a2ecf  802-3-ethernet  enp0s8
+
+#修改当前网络连接对应的DNS服务器，这里的网络连接可以用名称或者UUID来标识
+nmcli con mod enp0s3 ipv4.dns "223.5.5.5 223.6.6.6"
+
+#将dns配置生效
+nmcli con up enp0s3
+
+
+2、阿里云镜像
+yum install -y wget
+# http://mirrors.aliyun.com/help/centos
+# 1、备份
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+# CentOS 7
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum clean all
+yum makecache
+
+3、源码编译环境
+yum install -y gcc gcc-c++ bzip2 kernel-devel net-tools
+
+
+4、python && pip
+将 python&&pip 目录中的文件上传到 ~ 目录下
+重新打开一个命令行！！！（必须，使阿里云镜像生效）
+python get-pip.py
+
+

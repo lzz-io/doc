@@ -1,0 +1,37 @@
+测试阶段：
+UI：
+	移动端 appium
+	web端 selenium webdriver、Robot Framework
+	
+API/接口：
+	SoapUI、Robot Framework
+	
+单元测试：
+	JUnit、TestNG、Mockito
+	
+性能测试：
+	JMeter
+
+测试工具：	
+缺陷管理系统：
+	Bugzilla，JIRA，Redmine、Mantis
+
+用例管理系统：
+	TestLink
+
+脚本管理系统：
+	SVN、Git等版本控制系统，也可和用例关联在一起管理
+
+执行驱动系统：
+	Robot Framework驱动， Hadoop系统
+
+测试报告管理系统：
+	文件或数据库
+
+实验室管理系统：
+	即硬件设备管理系统
+
+持续集成：
+	Jenkins，TeamCity
+
+

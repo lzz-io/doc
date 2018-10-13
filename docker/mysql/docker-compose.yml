@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+    db:
+      container_name: mysql
+      image: mysql:5.7
+
+      ports:
+        - "3306:3306"
+     
+      volumes:
+        - /etc/localtime:/etc/localtime:ro #时区问题
+        - mysql-data:/var/lib/mysql
+      #  - mysql-conf:/etc/mysql/conf.d
+
+      
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+        character-set-server: utf8mb4
+        collation-server: utf8mb4_unicode_ci
+        
+      #开机启动
+      restart: always 
+      
+      networks:
+        - mysql-networks
+
+    adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 8080:8080
+      networks:
+        - mysql-networks
+        
+volumes:
+  mysql-data:
+    driver: local
+#   mysql-conf:
+#     #driver: local
+#     
+networks:
+  mysql-networks:
+    

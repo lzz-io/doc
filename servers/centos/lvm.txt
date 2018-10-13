@@ -1,0 +1,34 @@
+扩容顺序：
+    创建新的PV---将新的PV加入到当前VG---扩容现有LV----扩容文件系统
+
+创建新PV并将新的PV加入到现有的VG：
+命令：pvcreate （创建PV，如果是创建VG前面修改成VG即可，只是语法稍有区别）
+命令：vgextend （对VG进行扩容）
+语法：vgextend 现有的VG + PV绝对路径
+语法：pvcreate 分区1 + 分区2 + 分区3 + …
+语法：vgcreate –s pe vgname pv + + + （这里的参数-S表示在创建VG的时候修改PE块的大小）
+	
+	
+fdisk -l
+
+fdisk /dev/sdb
+	n p w
+	
+pvcreate /dev/sdb1
+
+vgcreate /dev/sdb
+vgextend centos /dev/sdb1
+
+lvextend /dev/centos/root /dev/sdb1
+
+
+#调整分区大小
+# ext格式分区 用 resize2fs /dev/centos/root
+# xfs分区
+xfs_growfs /
+
+
+
+
+
+

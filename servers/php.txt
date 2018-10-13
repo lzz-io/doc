@@ -1,0 +1,101 @@
+php 5.3 以后没有 php5isapi.dll 官方推荐 FCGI
+php用非线程安全版
+VC9 x86 Non Thread Safe
+
+http://www.iis.net/download/fastcgi
+fcgisetup_1.5_rtw_x86.msi
+
+#########################################
+C:\WINDOWS\system32\inetsrv\fcgiext.ini
+在文件最后加上下面的语句：
+[Types](这个是文件原来就有的，在[Types]后面加上下面的语句就可以，要全部哦不然会报错的。)
+php=PHP
+[PHP]
+ExePath=D:\servers\php5\php-cgi.exe
+InstanceMaxRequests=10000
+EnvironmentVars=PHP_FCGI_MAX_REQUESTS:10000
+ActivityTimeout=3600
+RequestTimeout=3600
+
+这里：
+InstanceMaxRequests=10000
+EnvironmentVars=PHP_FCGI_MAX_REQUESTS:10000
+
+这个参数决定了一个php-cgi进程被创建出来之后，最多接受的PHP请求数，在lighttpd中默认配置是10000。也就是说这个php- cgi进程每接受10000次PHP请求后会终止，释放所有内存，并重新被管理进程启动。如果把它降低，比如改成100，那么php-cgi重启的周期会 大大缩短，偶然的高内存操作造成的问题影响时间也会缩短。
+
+一个php-cgi程序占用7－25M内存，我的占用是14－18M内存，决定于php模块开启多少。
+
+减小php-cgi进程的同时存在数目，可以减小内存占用值，我现在用的服务器，把PHP_FCGI_MAX_REQUESTS值调整到了 500 ，减小了php-cgi进程的数量，占用内存也减小了，反应速度比以前快了不少，至少调整到多少，可根据您的站点访问量来决定。
+
+###########################################
+PHP.ini
+upload_tmp_dir = d:\temp
+extension_dir = "./ext/"
+date.timezone = Asia/Shanghai
+date.timezone = PRC
+
+#############################################
+iis中 配置
+可执行文件填写C:\WINDOWS\system32\inetsrv\fcgiext.dll
+扩展名填写.php。
+
+
+
+################################################
+php用非线程安全版
+VC9 x86 Non Thread Safe
+
+php.ini
+
+[Zend.loader]
+zend_loader.enable=1
+zend_loader.disable_licensing=1
+zend_loader.obfuscation_level_support=3
+zend_loader.license_path=
+zend_extension="D:/servers/ZendGuardLoader-php-5.3-Windows/php-5.3.x/ZendLoader.dll"
+
+
+
+################################################
+zend_extension_ts = ...
+;此处 _ts 代表 线程安全
+[XDebug]
+zend_extension="D:/servers/php_xdebug/php_xdebug-2.2.3-5.4-vc9-nts.dll"
+xdebug.profiler_enable=on 
+xdebug.trace_output_dir="D:\temp\xdebug" 
+xdebug.profiler_output_dir="D:\temp\xdebug" 
+xdebug.remote_enable=on 
+xdebug.remote_handler=dbgp 
+xdebug.remote_host=localhost 
+xdebug.remote_port=9000
+xdebug.auto_trace=on
+xdebug.collect_params=on
+xdebug.collect_return=on
+
+
+###################################################
+问题：XDebug无法进入断点
+在php.ini中加入
+
+;开启自动跟踪
+xdebug.auto_trace = On
+;开启异常跟踪
+xdebug.show_exception_trace = On
+;开启远程调试自动启动
+xdebug.remote_autostart = On
+;开启远程调试
+xdebug.remote_enable = On
+;收集变量
+xdebug.collect_vars = On
+;收集返回值
+xdebug.collect_return = On
+;收集参数
+xdebug.collect_params = On
+xdebug.trace_output_dir="e:/xampp/temp"
+xdebug.profiler_enable=On
+xdebug.profiler_output_dir=" e:/xampp/temp"
+ 
+xdebug.remote_host=localhost
+xdebug.remote_port=9000
+xdebug.remote_handler=dbgp
+

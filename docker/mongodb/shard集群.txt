@@ -1,0 +1,325 @@
+1、ssh免密码登录：为了管理方便；测试环境同时关闭防火墙、关闭 SELinux等
+1.1、修改hosts文件
+vi /etc/hosts
+echo "10.0.0.11 node1" >> /etc/hosts
+echo "10.0.0.12 node2" >> /etc/hosts
+echo "10.0.0.13 node3" >> /etc/hosts
+
+1.2、生成密钥对并分发到各节点
+ssh-keygen 
+ssh-copy-id node1
+ssh-copy-id node2
+ssh-copy-id node3
+
+1.3、阿里云密钥对管理的服务器，不用生成，直接将保存的密钥上传到服务器就行
+# 1.3.1、方法一
+# 注意文件权限
+# 上传 ecs.pem >> id_rsa
+# cp authorized_keys id_rsa.pub
+# chmod 600 authorized_keys
+# chmod 600 id_rsa
+# chmod 644 id_rsa.pub
+# 1.3.2、方法二
+# 根据私钥生成公钥
+# 上传 ecs.pem >> id_rsa
+# chmod 600 id_rsa
+ssh-keygen -f ~/.ssh/id_rsa -y > ~/.ssh/id_rsa.pub
+# 免密登录
+# cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+# chmod 0600 ~/.ssh/authorized_keys
+
+
+2、 生成keyFile并分发，docker部署，最好将keyfile打包到镜像里
+	开启--auth认证后，各个configsvr、shardsvr、mongos节点通信需要keyfile认证
+# A key’s length must be between 6 and 1024 characters and 
+# may only contain characters in the base64 set.
+# NOTE
+# On UNIX systems, the keyfile must not have group or world permissions. 
+# On Windows systems, keyfile permissions are not checked.
+# 系统docker用户id 999
+mkdir -p /data/mongo
+openssl rand -base64 756 > /data/mongo/key
+chmod 400 /data/mongo/key
+chown 999 /data/mongo/key
+
+# node2
+ssh node2 "mkdir -p /data"
+scp -r /data/mongo node2:/data/
+ssh node2 chmod 400 /data/mongo/key
+ssh node2 chown 999 /data/mongo/key
+
+# node3
+ssh node3 "mkdir -p /data"
+scp -r /data/mongo node3:/data/
+ssh node3 chmod 400 /data/mongo/key
+ssh node3 chown 999 /data/mongo/key
+
+
+2、 安装
+2.1、 docker
+docker pull mongo
+docker run mongo
+
+2.2、下载安装：
+    https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/#install-mongodb-community-edition
+vi /etc/yum.repos.d/mongodb-org-3.6.repo
+[mongodb-org-3.6]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.6.asc
+
+sudo yum install -y mongodb-org
+systemctl start mongod
+
+tail -f /var/log/mongodb/mongod.log
+
+# 数据库位于： /var/lib/mongodb/
+
+# 卸载
+sudo yum erase $(rpm -qa | grep mongodb-org)
+sudo rm -r /var/log/mongodb
+sudo rm -r /var/lib/mongo
+
+3、测试安装
+# mongo --host 127.0.0.1:27017
+mongo
+# 查看当前所在数据库
+db
+# 显示所有数据库
+show dbs
+# 切换数据库
+use admin
+# 显示当前库中所有表
+show tables
+# 统计
+db.stats()
+
+4、配置config节点，必须是副本集模式
+4.1.1、docker
+# --configsvr：默认端口27019
+# 			修改端口--port 27017，便于与dockerfile中port27017对应
+# server 1
+docker run -d --restart always --network mynet \
+        --hostname mongo-configsvr1 --name mongo-configsvr1 \
+        -v mongo-configsvr1-configdb:/data/configdb \
+        -v mongo-configsvr1-db:/data/db \
+        -v /data/mongo/key:/data/mongo/key \
+        mongo \
+        --port 27017 --configsvr --replSet configrs --auth --keyFile /data/mongo/key
+# server 2
+...
+# server 3
+...
+
+4.1.2、
+vi /etc/mongod.conf
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: configrs
+net:
+  bindIp: 0.0.0.0
+
+# test
+mongod --config /etc/mongod.conf
+# Command Line
+mongod --configsvr --replSet configrs --dbpath /data/db --bind_ip 0.0.0.0
+# 在其他config节点执行上述操作
+
+4.2、连接任一节点
+# 默认端口 27019
+# mongo --host localhost --port 27019
+mongo
+# 查看当前所在数据库
+db
+# 显示所有数据库
+show dbs
+# 切换数据库
+use admin
+# 显示当前库中所有表
+show tables
+# 统计
+db.stats()
+
+4.3、初始化副本集，只运行一次
+use admin
+rs.initiate()
+# rs.add("node1:27017,node2:27017,node3:27017")
+# or
+# rs.add("node1:27017")
+# rs.add("node2:27017")
+# rs.add("node3:27017")
+rs.status()
+
+5、shard节点配置
+    非副本集模式，生产环境用副本集模式，参考configserver配置
+5.1.1、docker
+# --configsvr：默认端口27018
+#           修改端口--port 27017，便于与dockerfile中port27017对应
+# server 1
+docker run -d --restart always --network mynet \
+        --hostname mongo-shardsvr1 --name mongo-shardsvr1 \
+        -v mongo-shardsvr1-configdb:/data/configdb \
+        -v mongo-shardsvr1-db:/data/db \
+        -v /data/mongo/key:/data/mongo/key \
+        mongo \
+        --port 27017 --shardsvr --auth --keyFile /data/mongo/key --bind_ip 0.0.0.0
+        # 副本集模式 --replSet shardrs
+
+# server 2
+...
+# server 3
+...
+
+5.1、
+vi /etc/mongod.conf
+sharding:
+  clusterRole: shardsvr
+replication:
+  replSetName: shardrs
+net:
+  bindIp: 0.0.0.0
+
+# test
+mongod --config /etc/mongod.conf
+# Command Line
+mongod --shardsvr --replSet shardrs --dbpath /data/db --bind_ip 0.0.0.0
+# 在其他shard节点执行上述操作
+
+5.2、连接任一节点
+# mongo --host localhost --port 27017
+mongo
+# 查看当前所在数据库
+db
+# 显示所有数据库
+show dbs
+# 切换数据库
+use admin
+# 显示当前库中所有表
+show tables
+
+5.3、初始化副本集，只运行一次，非副本集模式略过
+use admin
+rs.initiate()
+# rs.add("node1:27017,node2:27017,node3:27017")
+# or
+# rs.add("node1:27017")
+# rs.add("node2:27017")
+# rs.add("node3:27017")
+rs.status()
+
+6、mongos路由节点配置
+6.1、mongos.conf
+mv /etc/mongod.conf /etc/mongos.conf
+
+sharding:
+  configDB: configrs/node1:27017,node2:27017,node3:27017
+net:
+  bindIp: 0.0.0.0
+# 不需要数据配置
+
+# 开机启动设置
+mv /usr/lib/systemd/system/mongod.service /usr/lib/systemd/system/mongos.service
+# 修改其中 mongod to mongos
+
+# test
+mongos --config /etc/mongos.conf
+# Command Line
+mongos --configdb configrs/node1:27017,node2:27017,node3:27017 --bind_ip 0.0.0.0
+# 在其他mongos节点执行上述操作
+
+6.2、连接任一节点
+# mongo --host localhost --port 27017
+mongo
+sh.status()
+# 查看当前所在数据库
+db
+# 显示所有数据库
+show dbs
+# 切换数据库
+use admin
+# 显示当前库中所有表
+show tables
+
+7、启用分片，mongo默认不自动分片，需手动设置需要分片的对象
+7.1、连接任一节点
+# mongo --host localhost --port 27017
+mongo
+use admin
+
+7.2、Add Shards to the Cluster
+# sh.addShard( "shardrs/node1:27017,node2:27017,node3:27017")
+sh.addShard( "shardrs/node3:27017" )
+# adding a standalone mongod shard to the cluster:
+# sh.addShard( "node3:27017" )
+
+7.3、Enable Sharding for a Database
+# 作用：数据库中的表分布到不同节点，但是每个表中的数据不分片
+sh.enableSharding("<database>")
+
+7.4、 Shard a Collection
+# 作用：表中的数据分片到不同节点
+sh.shardCollection("<database>.<collection>", { <key> : <direction> } )
+
+
+
+
+
+
+八. 创建一个测试库和集合
+    use 新库名  
+    
+            创建一个新的库（当然是在路由结点，即mongos的shell中进行）  
+    
+    db.新表名.insert({...})  
+    
+            插入若干条数据  
+    
+    db.新表名.ensureIndex({...})  
+    
+            为这个表建一个索引吧  
+            例如我是db.usertable.ensureIndex({ userid : 1 },{ unique : true })  
+    
+    db.runCommand({ enablesharding : 新库名 })  
+    
+            使刚才创建的库能够被分片  
+            （发现报错，提示必须在admin环境下，所以use admin，再执行这条命令）  
+    
+    db.runCommand({ shardcollection : "库名.表名", key : {...} })  
+    
+            为某个库中的某个表添加分片片键,例如我是 :  
+            db.runCommand(  
+                {  
+                    shardcollection : "weshare.usertable",  
+                    key             : { "userid" : 1 },  
+                    unique          : true  
+                }  
+            )  
+            注意，强烈推荐片键是索引的一部分前缀，有利于达到查询的局部化  
+
+
+
+九. 查看集群状态
+use config  
+
+        进入config库，即元数据库  
+        （当然这里还是在路由结点的mongos的shell里执行命令）  
+
+db.shards.find()  
+
+        查看当前集群中有哪些shard结点  
+
+use 新库名  
+
+        进入你刚才创建的那个库  
+
+db.表名.stats()  
+
+        查看该库中的该表的集群状态  
+        若发现里面最开始的sharded字段是true，则表示你的集群创建成功了  
+
+db.printShardingStatus()  
+
+        查看分片状态
