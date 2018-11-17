@@ -1,30 +1,37 @@
-version: '3'
+version: '3.6'
 
 services:
   web:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
-    deploy:
-      replicas: 1
-    hostname: 'gitlab.example.com'
+    # hostname: 'node3.lzz.io'
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://192.168.56.101:20080'
+        external_url 'http://node3.lzz.io:20080'
+
     ports:
       #- '80:80'
       #- '443:443'
       #- '22:22'
       - '20080:20080'
     volumes:
-      #- '/opt/gitlab/config:/etc/gitlab'
-      #- '/opt/gitlab/logs:/var/log/gitlab'
-      #- '/opt/gitlab/data:/var/opt/gitlab'
-      - gitlab-config:/etc/gitlab
-      - gitlab-logs:/var/log/gitlab
-      - gitlab-data:/var/opt/gitlab
+      # mkdir -p ./config ./logs ./data
+      - ./config:/etc/gitlab
+      - ./logs:/var/log/gitlab
+      - ./data:/var/opt/gitlab
+      #- gitlab-config:/etc/gitlab
+      #- gitlab-logs:/var/log/gitlab
+      #- gitlab-data:/var/opt/gitlab
 
-volumes:
-  gitlab-config:
-  gitlab-logs:
-  gitlab-data:
+    deploy:
+      replicas: 1
+      labels: [APP=gitlab]
+      placement:
+        constraints: [node.hostname == node3]
+
+#volumes:
+#  gitlab-config:
+#  gitlab-logs:
+#  gitlab-data:
 
