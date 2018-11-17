@@ -5,4 +5,27 @@ JVM层GC调优
 	GCViewer
 
 jdk1.8 内存结构
+
+
+jps -l
+
+top -H -p <pid>
+
+printf "%x" <sub-pid>
+
+jstat -gcutil 15178 1s观察一段时间GC状况
+jstat -gccause 15178 1s
+
+jinfo -flags 查看该VM参数
+
+jstack -l 15178 
+jstack <pid> > jstack.log
+
+
+jmap -dump:live,format=b,file=heap.bin <pid>
+
+jmap -heap 查看统计结果
+
+jmap -histo 15178 | less 查看一下对象实例数量和空间占用
+看到前面的一种数据各占用几百兆内存。总和在1935483656，和堆空间基本相同。
 	
