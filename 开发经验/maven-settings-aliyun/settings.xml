@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 本文件改名为 settings.xml -->
-
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -24,7 +22,7 @@ under the License.
 <!--
  | This is the configuration file for Maven. It can be specified at two levels:
  |
- |  1. User Level. This settings.xml file provides configuration for a single user, 
+ |  1. User Level. This settings.xml file provides configuration for a single user,
  |                 and is normally provided in ${user.home}/.m2/settings.xml.
  |
  |                 NOTE: This location can be overridden with the CLI option:
@@ -33,8 +31,8 @@ under the License.
  |
  |  2. Global Level. This settings.xml file provides configuration for all Maven
  |                 users on a machine (assuming they're all using the same Maven
- |                 installation). It's normally provided in 
- |                 ${maven.home}/conf/settings.xml.
+ |                 installation). It's normally provided in
+ |                 ${maven.conf}/settings.xml.
  |
  |                 NOTE: This location can be overridden with the CLI option:
  |
@@ -45,8 +43,8 @@ under the License.
  | values (values used when the setting is not specified) are provided.
  |
  |-->
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <!-- localRepository
    | The path to the local repository maven will use to store artifacts.
@@ -114,8 +112,8 @@ under the License.
     <!-- server
      | Specifies the authentication information to use when connecting to a particular server, identified by
      | a unique name within the system (referred to by the 'id' attribute below).
-     | 
-     | NOTE: You should either specify username/password OR privateKey/passphrase, since these pairings are 
+     |
+     | NOTE: You should either specify username/password OR privateKey/passphrase, since these pairings are
      |       used together.
      |
     <server>
@@ -124,7 +122,7 @@ under the License.
       <password>repopwd</password>
     </server>
     -->
-    
+
     <!-- Another sample, using keys to authenticate.
     <server>
       <id>siteServer</id>
@@ -132,32 +130,17 @@ under the License.
       <passphrase>optional; leave empty if not used.</passphrase>
     </server>
     -->
-	<server>  
-		<id>47.88.105.91:8081</id>  
-		<username>admin</username>  
-		<password>admin888</password>  
-	</server>  
-	<server>  
-		<id>nexus-releases</id>  
-		<username>admin</username>  
-		<password>admin123</password>  
-	</server>  
-	<server>  
-		<id>nexus-snapshots</id>  
-		<username>admin</username>  
-		<password>admin123</password>  
-	</server>
   </servers>
-		
+
   <!-- mirrors
    | This is a list of mirrors to be used in downloading artifacts from remote repositories.
-   | 
+   |
    | It works like this: a POM may declare a repository to use in resolving certain artifacts.
    | However, this repository may have problems with heavy traffic at times, so people have mirrored
    | it to several places.
    |
    | That repository definition will have a unique id, so we can create a mirror reference for that
-   | repository, to be used as an alternate download site. The mirror site will be the preferred 
+   | repository, to be used as an alternate download site. The mirror site will be the preferred
    | server for that repository.
    |-->
   <mirrors>
@@ -173,57 +156,27 @@ under the License.
       <url>http://my.repository.com/repo/path</url>
     </mirror>
      -->
-
-	<!-- 高级的镜像配置： 
-		1.<mirrorOf>*</mirrorOf> 
-		匹配所有远程仓库。 这样所有pom中定义的仓库都不生效
-		2.<mirrorOf>external:*</mirrorOf> 
-		匹配所有远程仓库，使用localhost的除外，使用file://协议的除外。也就是说，匹配所有不在本机上的远程仓库。 
-		3.<mirrorOf>repo1,repo2</mirrorOf> 
-		匹配仓库repo1和repo2，使用逗号分隔多个远程仓库。 
-		4.<mirrorOf>*,!repo1</miiroOf> 
-		匹配所有远程仓库，repo1除外，使用感叹号将仓库从匹配中排除。 -->
-	 
-	<!-- 设置私库mirror 表示maven所有的请求都由nexus来处理  -->
-	<!-- 配置镜像让 Maven 只使用私服
-		可以创建一个匹配任何仓库的镜像，镜像的地址为私服，这样，
-		Maven 对任何仓库的构件下载请求都会转到私服中。
-	-->
-
-	<!-- mirror 镜像的作用 -->
-	<!-- 1、解决从 maven 中央仓库下载慢的问题 -->
-	<!-- 2、便于团队开发，各个模块的分工依赖问题 -->
-	<!-- 3、缓存 中央仓库、jboss、spring、oschina 仓库-->	
-	<mirror>  
-        <id>47.88.105.91:8081</id>  
+	 <mirror>  
+        <id>mirror-aliyun</id>  
 		<mirrorOf>central</mirrorOf>
-        <name>Nexus Mirror.</name>  
-        <url>http://47.88.105.91:8081/nexus/content/groups/public/</url>  
-    </mirror> 
-	<!--
-	<mirror>  
-        <id>47.88.105.91:8081</id>  
-		<mirrorOf>central</mirrorOf>
-        <name>Nexus Mirror.</name>  
-        <url>http://47.88.105.91:8081/nexus/content/groups/public/</url>  
+        <name>aliyun Mirror.</name>  
+        <url>https://maven.aliyun.com/repository/central</url>  
     </mirror>
-	--> 
+  </mirrors>
 
-</mirrors>
-  
   <!-- profiles
    | This is a list of profiles which can be activated in a variety of ways, and which can modify
    | the build process. Profiles provided in the settings.xml are intended to provide local machine-
    | specific paths and repository locations which allow the build to work in the local environment.
    |
    | For example, if you have an integration testing plugin - like cactus - that needs to know where
-   | your Tomcat instance is installed, you can provide a variable here such that the variable is 
+   | your Tomcat instance is installed, you can provide a variable here such that the variable is
    | dereferenced during the build process to configure the cactus plugin.
    |
    | As noted above, profiles can be activated in a variety of ways. One way - the activeProfiles
    | section of this document (settings.xml) - will be discussed later. Another way essentially
    | relies on the detection of a system property, either matching a particular value for the property,
-   | or merely testing its existence. Profiles can also be activated by JDK version prefix, where a 
+   | or merely testing its existence. Profiles can also be activated by JDK version prefix, where a
    | value of '1.4' might activate a profile when the build is executed on a JDK version of '1.4.2_07'.
    | Finally, the list of active profiles can be specified directly from the command line.
    |
@@ -262,23 +215,39 @@ under the License.
       </repositories>
     </profile>
     -->
-	
-	<!-- 设置全局的jdk -->
-	
-	<profile>  
-		<id>jdk17</id>  
-		<activation>  
-			<activeByDefault>true</activeByDefault>  
-			<jdk>1.7</jdk>  
-		</activation>  
-		<properties>  
-			<maven.compiler.source>1.7</maven.compiler.source>  
-			<maven.compiler.target>1.7</maven.compiler.target>  
-			<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>  
-		</properties>   
-	</profile> 
-	
-
+	<!-- 
+	<profile>
+		<id>central-aliyun</id>
+		<repositories>
+			<repository>
+				id与central相同，将覆盖默认设置
+			  <id>aliyun</id>
+			  <name>Central Repository</name>
+			  <url>https://maven.aliyun.com/repository/central</url>
+			  <releases>
+			  配置选项可以设置：always、daily（一天一次，默认），interval:x（x为一整数，单位分钟），never；
+				<updatePolicy>always</updatePolicy>
+			  </releases>
+			  <snapshots>
+				<enabled>false</enabled>
+			  </snapshots>
+			</repository>
+		</repositories>
+		<pluginRepositories>
+			<pluginRepository>
+			  <id>aliyun</id>
+			  <name>Central Repository</name>
+			  <url>https://maven.aliyun.com/repository/central</url>
+			  <releases>
+				<updatePolicy>always</updatePolicy>
+			  </releases>
+			  <snapshots>
+				<enabled>false</enabled>
+			  </snapshots>
+			</pluginRepository>
+		</pluginRepositories>
+	</profile>
+	 -->
     <!--
      | Here is another profile, activated by the system property 'target-env' with a value of 'dev',
      | which provides a specific path to the Tomcat instance. To use this, your plugin configuration
@@ -288,7 +257,7 @@ under the License.
      | <plugin>
      |   <groupId>org.myco.myplugins</groupId>
      |   <artifactId>myplugin</artifactId>
-     |   
+     |
      |   <configuration>
      |     <tomcatLocation>${tomcatPath}</tomcatLocation>
      |   </configuration>
@@ -313,103 +282,7 @@ under the License.
       </properties>
     </profile>
     -->
-	
-	
-    <!-- 覆盖maven中央仓库设置开启releases和snapshots版本的下载  -->
-	<!-- 想覆盖中央仓库 id 必须 central -->
-	<!-- 仓库及插件仓库配置，它们的 id 都为 central，相当于覆盖了超级 pom 中央仓库的配置，
-         它们的 url 已经无关紧要了，因为所有请求都会通过镜像访问私服地址。
-		 -->
-    <profile>  
-        <id>central</id>  
-        <repositories>  
-             <repository>  
-                <id>central</id>  
-                <url>https://repo.maven.apache.org/maven2/</url>  
-                <releases><enabled>true</enabled></releases>  
-                <snapshots><enabled>true</enabled></snapshots>  
-            </repository>  
-        </repositories>  
-        <pluginRepositories>  
-            <pluginRepository>  
-                <id>central</id>  
-                <url>https://repo.maven.apache.org/maven2/</url>  				
-                <releases><enabled>true</enabled></releases>  				
-                <snapshots><enabled>true</enabled></snapshots>  
-            </pluginRepository>  
-        </pluginRepositories>  		
-    </profile>
-
-	<!-- <profile>
-		<id>osc</id>
-		<activation>
-			<activeByDefault>true</activeByDefault>
-		</activation>
-		<repositories>
-			<repository>
-				<id>osc</id>
-				<url>http://maven.oschina.net/content/groups/public/</url>
-			</repository>
-			<repository>
-				<id>osc_thirdparty</id>
-				<url>http://maven.oschina.net/content/repositories/thirdparty/</url>
-			</repository>
-		</repositories>
-		<pluginRepositories>
-			<pluginRepository>
-				<id>osc</id>
-				<url>http://maven.oschina.net/content/groups/public/</url>
-			</pluginRepository>
-		</pluginRepositories>
-	</profile> -->
-	
-	<!-- 私有服务器 -->
-    <!-- <profile>  
-        <id>public</id>  
-        <repositories>  
-             <repository>  
-                <id>public</id>  
-                <url>http://47.88.105.91:8081/nexus/content/groups/public/</url>  
-                <releases><enabled>true</enabled></releases>  
-                <snapshots><enabled>true</enabled></snapshots>  
-            </repository>  
-        </repositories>  
-        <pluginRepositories>  
-            <pluginRepository>  
-                <id>public</id>  
-                <url>http://47.88.105.91:8081/nexus/content/groups/public/</url>  				
-                <releases><enabled>true</enabled></releases>  				
-                <snapshots><enabled>true</enabled></snapshots>  
-            </pluginRepository>  
-        </pluginRepositories>  
-    </profile>  -->
-		
-	<!-- 部署服务器 -->
-	<profile>  
-        <id>nexus-releases</id>  
-        <repositories>  
-             <repository>  
-                <id>nexus-releases</id>  
-                <url>http://47.88.105.91:8081/nexus/content/repositories/releases/</url>  
-                <releases><enabled>true</enabled></releases>  
-                <snapshots><enabled>true</enabled></snapshots>  
-            </repository>  
-        </repositories> 
-    </profile>
-	<profile>  
-        <id>nexus-snapshots</id>  
-        <repositories>  
-             <repository>  
-                <id>nexus-snapshots</id>  
-                <url>http://47.88.105.91:8081/nexus/content/repositories/snapshots/</url>  
-                <releases><enabled>true</enabled></releases>  
-                <snapshots><enabled>true</enabled></snapshots>  
-            </repository>  
-        </repositories> 
-    </profile>
-	
-  </profiles>  
-
+  </profiles>
 
   <!-- activeProfiles
    | List of profiles that are active for all builds.
@@ -419,8 +292,8 @@ under the License.
     <activeProfile>anotherAlwaysActiveProfile</activeProfile>
   </activeProfiles>
   -->
-  <!--激活私库信息的配置-->  
-    <activeProfiles>  
-        <activeProfile>central</activeProfile>
-    </activeProfiles>  
+  <activeProfiles>
+	
+    <!-- <activeProfile>central-aliyun</activeProfile> -->
+  </activeProfiles>
 </settings>
