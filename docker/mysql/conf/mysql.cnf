@@ -43,3 +43,8 @@ server-id	= 1
 lower_case_table_names = 1
 
 max_connections=2000
+
+# 时区
+; default-time-zone='SYSTEM'
+; windows下必须这样配置
+default-time-zone='+08:00'
