@@ -48,3 +48,11 @@ max_connections=2000
 ; default-time-zone='SYSTEM'
 ; windows下必须这样配置
 default-time-zone='+08:00'
+
+
+; 关闭binlog
+skip-log-bin
+
+; 开启binlog，默认开启
+; 设置binlog格式
+; binlog_format=mixed
