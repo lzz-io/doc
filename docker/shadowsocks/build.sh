@@ -20,12 +20,14 @@ systemctl stop firewalld
 systemctl enable docker
 systemctl restart docker
 
+# 阿里云
 docker login -u 15590988@qq.com -p q1w2e3r4 registry-vpc.cn-hongkong.aliyuncs.com
 
 docker run -d -p 3333:8388 -p 3333:8388/udp \
     -e PASSWORD=gfwsb -e METHOD=rc4-md5 -e TZ=CST-8 \
     --name=shadowsocks --restart=always \
     registry-vpc.cn-hongkong.aliyuncs.com/lzz-io/shadowsocks
+
 
 # 腾讯云
 docker login -u 15590988@qq.com -p q1w2e3r4 registry.cn-hongkong.aliyuncs.com
