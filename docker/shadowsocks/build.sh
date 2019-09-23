@@ -27,12 +27,6 @@ systemctl enable docker
 systemctl restart docker
 
 
-# docker pull shadowsocks/shadowsocks-libev
-# docker run -d -p 8888:8388 -p 8888:8388/udp \
-        # -e PASSWORD=gfwsb  -e METHOD=aes-256-cfb -e TZ=CST-8 \
-        # --name=shadowsocks --restart=always \
-        # shadowsocks/shadowsocks-libev
-
 docker pull shadowsocks/shadowsocks-libev
 docker run -d -p 8888:8388 -p 8888:8388/udp \
         -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=CST-8 \
