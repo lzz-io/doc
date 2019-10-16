@@ -35,9 +35,11 @@ start /b bin\windows\kafka-server-start.bat config/server-2.properties
 bin\windows\kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 3 --partitions 3 --topic test
 
 ### 现在我们搭建了一个集群，怎么知道每个节点的信息呢？运行“"describe topics”命令就可以了：
+bin\windows\kafka-topics.bat --describe --zookeeper localhost:2181
 bin\windows\kafka-topics.bat --describe --zookeeper localhost:2181 --topic test
 
 ### topic list
+bin\windows\kafka-topics.bat --list --zookeeper localhost:2181
 bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092
 
 ### 删除topic
