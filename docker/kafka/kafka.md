@@ -29,6 +29,8 @@ start /b bin\windows\zookeeper-server-start.bat config/zookeeper.properties
 start /b bin\windows\kafka-server-start.bat config/server-0.properties
 start /b bin\windows\kafka-server-start.bat config/server-1.properties
 start /b bin\windows\kafka-server-start.bat config/server-2.properties
+cd bin\windows
+
 
 ### 创建一个拥有3个副本的topic:
 #bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 3 --partitions 1 --topic my-replicated-topic
