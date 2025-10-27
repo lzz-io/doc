@@ -1,3 +1,15 @@
+
+
+# 20250926 ssserver-rust
+docker run --name ssserver-rust-38388 \
+  --restart always \
+  -p 38388:8388/tcp -p 38388:8388/udp \
+  -d ghcr.io/shadowsocks/ssserver-rust:latest ssserver -s "0.0.0.0:8388" -m "aes-256-gcm" -k "gfwsb"
+
+
+
+##############
+
 docker build -t registry-vpc.cn-hongkong.aliyuncs.com/lzz-io/shadowsocks .
 
 docker images -a
@@ -28,8 +40,28 @@ systemctl restart docker;
 
 docker pull shadowsocks/shadowsocks-libev;
 docker run -d -p 8888:8388 -p 8888:8388/udp \
-        -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=CST-8 \
-        --name=shadowsocks --restart=always \
+        -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
+        --name=shadowsocks-8888 --restart=always \
+        shadowsocks/shadowsocks-libev;
+
+docker run -d -p 80:8388 -p 80:8388/udp \
+        -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
+        --name=shadowsocks-80 --restart=always \
+        shadowsocks/shadowsocks-libev;
+
+docker run -d -p 443:8388 -p 443:8388/udp \
+        -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
+        --name=shadowsocks-443 --restart=always \
+        shadowsocks/shadowsocks-libev;
+
+docker run -d -p 8080:8388 -p 8080:8388/udp \
+        -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
+        --name=shadowsocks-8080 --restart=always \
+        shadowsocks/shadowsocks-libev;
+
+docker run -d -p 3389:8388 -p 3389:8388/udp \
+        -e PASSWORD=gfwsb  -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
+        --name=shadowsocks-3389 --restart=always \
         shadowsocks/shadowsocks-libev;
 
 
@@ -37,7 +69,7 @@ docker run -d -p 8888:8388 -p 8888:8388/udp \
 # docker login -u 15590988@qq.com -p q1w2e3r4 registry-vpc.cn-hongkong.aliyuncs.com
 
 # docker run -d -p 8888:8388 -p 8888:8388/udp \
-    # -e PASSWORD=gfwsb -e METHOD=aes-256-gcm -e TZ=CST-8 \
+    # -e PASSWORD=gfwsb -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
     # --name=shadowsocks --restart=always \
     # registry-vpc.cn-hongkong.aliyuncs.com/lzz-io/shadowsocks
 
@@ -46,7 +78,7 @@ docker run -d -p 8888:8388 -p 8888:8388/udp \
 # docker login -u 15590988@qq.com -p q1w2e3r4 registry.cn-hongkong.aliyuncs.com
 
 # docker run -d -p 8888:8388 -p 8888:8388/udp \
-    # -e PASSWORD=gfwsb -e METHOD=aes-256-gcm -e TZ=CST-8 \
+    # -e PASSWORD=gfwsb -e METHOD=aes-256-gcm -e TZ=Asia/Shanghai \
     # --name=shadowsocks --restart=always \
     # registry.cn-hongkong.aliyuncs.com/lzz-io/shadowsocks
 
