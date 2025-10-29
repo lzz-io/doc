@@ -1,3 +1,4 @@
 #目录加 /
 .git/
 node_modules/
+src/
