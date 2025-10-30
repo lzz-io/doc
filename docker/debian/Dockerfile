@@ -5,7 +5,7 @@ FROM debian
 RUN echo '\
 Types: deb\n\
 URIs: http://mirrors.cernet.edu.cn/debian\n\
-Suites: trixie trixie-updates trixie-backports sid\n\
+Suites: trixie trixie-updates trixie-backports\n\
 Components: main contrib non-free non-free-firmware\n\
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg\n\
 \n\
